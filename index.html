@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a56db">
+  <title>Cumpleaños de Juan José · ¡A toda velocidad!</title>
+  <meta name="description" content="Estás invitado al cumpleaños de Juan José Melo Santander. ¡La fiesta más veloz del mundo!">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23ffd400' stroke-width='16'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Dibujos propios (SVG) reutilizables con <use href="#id"> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="sonic" viewBox="0 0 120 120">
+        <path d="M30 44 L2 34 L24 56 L0 64 L26 72 L8 90 L38 84Z" fill="#1747c4"/>
+        <path d="M40 30 L50 4 L66 28Z M70 28 L88 4 L94 36Z" fill="#1e5bd6"/>
+        <circle cx="60" cy="64" r="40" fill="#1e5bd6"/>
+        <ellipse cx="76" cy="78" rx="26" ry="20" fill="#f6c9a0"/>
+        <ellipse cx="56" cy="54" rx="13" ry="17" fill="#fff"/>
+        <ellipse cx="80" cy="54" rx="13" ry="17" fill="#fff"/>
+        <circle cx="61" cy="57" r="7" fill="#2f9e44"/><circle cx="85" cy="57" r="7" fill="#2f9e44"/>
+        <circle cx="62" cy="57" r="3.5" fill="#111"/><circle cx="86" cy="57" r="3.5" fill="#111"/>
+        <ellipse cx="102" cy="70" rx="6" ry="5" fill="#111"/>
+        <path d="M74 88 Q88 98 100 86" stroke="#7a3b10" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="tails" viewBox="0 0 120 120">
+        <path d="M28 44 L30 6 L58 30Z M62 30 L90 6 L92 44Z" fill="#f5a31a"/>
+        <path d="M36 34 L36 16 L50 30Z M70 30 L84 16 L84 34Z" fill="#fff4e0"/>
+        <path d="M48 30 L60 10 L72 30Z" fill="#f5a31a"/>
+        <circle cx="60" cy="66" r="40" fill="#f5a31a"/>
+        <ellipse cx="60" cy="86" rx="32" ry="20" fill="#fff"/>
+        <ellipse cx="46" cy="58" rx="10" ry="13" fill="#fff"/><ellipse cx="74" cy="58" rx="10" ry="13" fill="#fff"/>
+        <circle cx="48" cy="60" r="7" fill="#3a8dde"/><circle cx="72" cy="60" r="7" fill="#3a8dde"/>
+        <circle cx="48" cy="60" r="3.5" fill="#111"/><circle cx="72" cy="60" r="3.5" fill="#111"/>
+        <ellipse cx="60" cy="76" rx="6" ry="4.5" fill="#111"/>
+        <path d="M50 88 Q60 96 70 88" stroke="#7a3b10" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="knuckles" viewBox="0 0 120 120">
+        <path d="M30 40 L6 28 L22 54 L4 66 L32 70Z" fill="#b8141c"/>
+        <path d="M34 34 L46 8 L62 30Z M60 28 L76 6 L88 36Z" fill="#e0222a"/>
+        <circle cx="60" cy="66" r="40" fill="#e0222a"/>
+        <ellipse cx="60" cy="82" rx="26" ry="18" fill="#f6c9a0"/>
+        <ellipse cx="45" cy="60" rx="10" ry="12" fill="#fff"/><ellipse cx="75" cy="60" rx="10" ry="12" fill="#fff"/>
+        <circle cx="47" cy="62" r="6" fill="#7b3fc4"/><circle cx="73" cy="62" r="6" fill="#7b3fc4"/>
+        <circle cx="47" cy="62" r="3" fill="#111"/><circle cx="73" cy="62" r="3" fill="#111"/>
+        <path d="M32 44 L54 54 L54 48 L34 38Z M88 44 L66 54 L66 48 L86 38Z" fill="#7a0d12"/>
+        <ellipse cx="60" cy="74" rx="6" ry="4.5" fill="#111"/>
+        <path d="M48 90 Q60 98 72 90" stroke="#7a3b10" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="amy" viewBox="0 0 120 120">
+        <path d="M30 44 L4 36 L24 58 L2 68 L28 74 L12 92 L38 84Z" fill="#d94f8f"/>
+        <path d="M38 30 L48 6 L64 28Z M68 28 L84 6 L94 36Z" fill="#ee6fa8"/>
+        <circle cx="60" cy="64" r="40" fill="#ee6fa8"/>
+        <path d="M22 44 Q60 14 98 44 L98 54 Q60 26 22 54Z" fill="#e8222d"/>
+        <ellipse cx="62" cy="82" rx="26" ry="18" fill="#f6c9a0"/>
+        <ellipse cx="46" cy="64" rx="10" ry="13" fill="#fff"/><ellipse cx="74" cy="64" rx="10" ry="13" fill="#fff"/>
+        <circle cx="47" cy="66" r="7" fill="#2f9e44"/><circle cx="73" cy="66" r="7" fill="#2f9e44"/>
+        <circle cx="47" cy="66" r="3.5" fill="#111"/><circle cx="73" cy="66" r="3.5" fill="#111"/>
+        <circle cx="30" cy="80" r="6" fill="#ff9ec4" opacity=".8"/><circle cx="92" cy="80" r="6" fill="#ff9ec4" opacity=".8"/>
+        <ellipse cx="60" cy="76" rx="5" ry="4" fill="#111"/>
+        <path d="M50 90 Q60 98 70 90" stroke="#7a3b10" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="shadow" viewBox="0 0 120 120">
+        <path d="M30 44 L2 34 L24 56 L0 64 L26 72 L8 90 L38 84Z" fill="#23232e"/>
+        <path d="M12 38 L2 34 L10 46Z M10 70 L0 64 L12 78Z" fill="#e8222d"/>
+        <path d="M40 30 L50 4 L66 28Z M70 28 L88 4 L94 36Z" fill="#23232e"/>
+        <path d="M50 12 L50 4 L56 14Z M80 12 L88 4 L88 18Z" fill="#e8222d"/>
+        <circle cx="60" cy="64" r="40" fill="#23232e"/>
+        <ellipse cx="76" cy="80" rx="26" ry="18" fill="#d9a47a"/>
+        <path d="M40 98 L50 120 L60 100 L72 120 L80 98Z" fill="#fff"/>
+        <ellipse cx="54" cy="58" rx="12" ry="12" fill="#fff"/><ellipse cx="80" cy="58" rx="12" ry="12" fill="#fff"/>
+        <circle cx="58" cy="60" r="7" fill="#e8222d"/><circle cx="84" cy="60" r="7" fill="#e8222d"/>
+        <circle cx="59" cy="60" r="3.5" fill="#111"/><circle cx="85" cy="60" r="3.5" fill="#111"/>
+        <path d="M40 42 L66 52 L66 46 L42 34Z M94 42 L68 52 L68 46 L92 34Z" fill="#111"/>
+        <ellipse cx="102" cy="74" rx="6" ry="5" fill="#111"/>
+        <path d="M76 90 Q88 94 98 88" stroke="#111" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="eggman" viewBox="0 0 120 120">
+        <path d="M6 120 Q60 84 114 120Z" fill="#c1121f"/>
+        <path d="M44 100 Q60 108 76 100 L80 112 Q60 122 40 112Z" fill="#ffd400"/>
+        <circle cx="60" cy="56" r="40" fill="#f2c9a0"/>
+        <rect x="18" y="38" width="84" height="8" rx="4" fill="#222"/>
+        <circle cx="44" cy="44" r="13" fill="#9bd1ff" stroke="#222" stroke-width="4"/>
+        <circle cx="76" cy="44" r="13" fill="#9bd1ff" stroke="#222" stroke-width="4"/>
+        <circle cx="46" cy="46" r="4" fill="#111"/><circle cx="74" cy="46" r="4" fill="#111"/>
+        <circle cx="60" cy="62" r="8" fill="#e8a77a"/>
+        <path d="M14 78 Q36 58 60 72 Q84 58 106 78 Q84 98 60 84 Q36 98 14 78Z" fill="#7a3b10"/>
+      </symbol>
+
+      <symbol id="ball" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="#1e5bd6"/>
+        <path d="M50 50 m0 -34 a34 34 0 1 1 -34 34 M50 50 m0 -18 a18 18 0 1 1 -18 18" stroke="#7fb2ff" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="6" fill="#f6c9a0"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+  <button class="audio-toggle" id="audioToggle" aria-label="Activar música" title="Música">🎵 <span id="audioText">Música</span></button>
+
+  <main>
+    <!-- ============ PORTADA (pantalla de título) ============ -->
+    <section class="cover" id="cover">
+      <div class="cover-inner">
+        <p class="zone">ZONA CHAMBÚ · ACTO 1</p>
+        <p class="cover-eyebrow">¡Estás invitado a la fiesta más veloz del mundo!</p>
+        <h1 class="cover-title">Juan José</h1>
+        <div class="age-ring" aria-label="Cumple años"><span data-f="age">?</span><small>AÑOS</small></div>
+        <svg class="cover-hero" role="img" aria-label="Sonic"><use href="#sonic"/></svg>
+        <button class="start-btn" id="openBtn" aria-expanded="false">▶ ¡Toca para empezar!</button>
+      </div>
+      <svg class="runner" aria-hidden="true"><use href="#ball"/></svg>
+      <div class="ground" aria-hidden="true"></div>
+    </section>
+
+    <!-- ============ INVITACIÓN ============ -->
+    <section class="invitation" id="invitation">
+      <article class="card">
+        <p class="zone">¡NUEVO RÉCORD DE FIESTA!</p>
+        <h2 class="card-title">Cumpleaños de<br><span>Juan José</span></h2>
+        <p class="card-full">Melo Santander</p>
+        <svg class="card-hero" role="img" aria-label="Sonic"><use href="#sonic"/></svg>
+
+        <p class="hosts-label">Invitan</p>
+        <p class="hosts">Dalitza Estefanía Santander Martínez<br>y Darío Melo</p>
+
+        <div class="hud">
+          <div><b data-f="day">--</b><span class="cap" data-f="month">mes</span><span data-f="year">----</span></div>
+          <div class="hud-sep"></div>
+          <div><b data-f="time">--:--</b><span class="cap" data-f="weekday">día</span></div>
+        </div>
+
+        <div class="place">
+          <p class="place-badge">📍 Punto de partida</p>
+          <h3 data-f="place">Lugar</h3>
+          <p data-f="city">Ciudad</p>
+          <div class="btn-row">
+            <a class="btn btn-blue" id="mapsLink" target="_blank" rel="noopener">🗺️ Ver en Google Maps</a>
+            <a class="btn btn-blue" id="calLink" target="_blank" rel="noopener">📅 Agendar en Calendario</a>
+          </div>
+        </div>
+
+        <div class="countdown">
+          <p>Faltan para la salida...</p>
+          <div class="cd-grid">
+            <div><b id="days">00</b><span>Días</span></div>
+            <div><b id="hours">00</b><span>Horas</span></div>
+            <div><b id="minutes">00</b><span>Min</span></div>
+            <div><b id="seconds">00</b><span>Seg</span></div>
+          </div>
+        </div>
+
+        <h3 class="team-title">El equipo ya está listo</h3>
+        <div class="team">
+          <div class="hero-card"><svg><use href="#sonic"/></svg><b>Sonic</b><span>El más veloz: ¡no llegues tarde!</span></div>
+          <div class="hero-card"><svg><use href="#tails"/></svg><b>Tails</b><span>Tu guía para llegar a la fiesta.</span></div>
+          <div class="hero-card"><svg><use href="#knuckles"/></svg><b>Knuckles</b><span>Guardián del pastel.</span></div>
+          <div class="hero-card"><svg><use href="#amy"/></svg><b>Amy</b><span>Reina de la diversión.</span></div>
+          <div class="hero-card"><svg><use href="#shadow"/></svg><b>Shadow</b><span>Maestro de los juegos.</span></div>
+          <div class="hero-card"><svg><use href="#eggman"/></svg><b>Dr. Eggman</b><span>Prohibido robar los dulces.</span></div>
+        </div>
+
+        <div class="rsvp">
+          <h3>¿Te unes a la carrera?</h3>
+          <p>Confirma tu asistencia por WhatsApp.</p>
+          <a class="btn btn-wa" id="waLink" target="_blank" rel="noopener">💬 ¡Cuenta conmigo!</a>
+        </div>
+
+        <p class="closing">¡Gracias por acompañarnos! 💙</p>
+        <button class="btn btn-ghost" id="closeBtn">▲ Cerrar invitación</button>
+      </article>
+    </section>
+  </main>
+
+  <button class="share-btn" id="shareBtn" aria-label="Compartir invitación">🔗</button>
+  <div class="share-tip" id="shareTip">¡Enlace copiado! 💙</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
