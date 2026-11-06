@@ -13,6 +13,8 @@ const EVENT = {
   durationHours: 4,
 };
 
+const $ = (id) => document.getElementById(id);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const when = new Date(EVENT.start);
 const fmt = (o) => when.toLocaleString("es-CO", { timeZone: "America/Bogota", ...o });
 const FIELDS = {
@@ -27,75 +29,158 @@ const stamp = (d) => d.toISOString().replace(/[-:]|\.\d{3}/g, "");
 const end = new Date(when.getTime() + EVENT.durationHours * 3600000);
 const q = encodeURIComponent;
 const place = `${EVENT.place}, ${EVENT.city}`;
-document.getElementById("mapsLink").href = `https://www.google.com/maps/search/?api=1&query=${q(place)}`;
-document.getElementById("calLink").href =
+$("mapsLink").href = `https://www.google.com/maps/search/?api=1&query=${q(place)}`;
+$("calLink").href =
   `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${q("Cumpleaños de Juan José Melo Santander")}` +
   `&dates=${stamp(when)}/${stamp(end)}&location=${q(place)}&details=${q("Invitan Dalitza Santander y Darío Melo")}`;
-document.getElementById("waLink").href =
+$("waLink").href =
   `https://wa.me/${EVENT.phone}?text=${q("Hola Dalitza y Darío, confirmo mi asistencia al cumpleaños de Juan José 🦔💙")}`;
 
 /* --------------------------------------------------------------------------
-   Anillos dorados cayendo (fondo)
+   Anillos para recoger: aparecen en cada acto y se cuentan en el marcador
    -------------------------------------------------------------------------- */
-(function rings() {
-  const canvas = document.getElementById("particleCanvas");
-  const ctx = canvas.getContext("2d");
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  let W, H, list = [];
-  const make = (y) => ({ x: Math.random() * W, y, r: 7 + Math.random() * 7, vy: 0.5 + Math.random() * 0.9, ph: Math.random() * 6.28 });
+const level = $("level");
+let rings = 0;
+const BONUS = 10000;
+const PER_ACT = [5, 4, 4, 4, 3];
 
-  function resize() {
-    W = canvas.width = innerWidth; H = canvas.height = innerHeight;
-    list = Array.from({ length: Math.floor(W * H / 30000) + 6 }, () => make(Math.random() * H));
+document.querySelectorAll(".act").forEach((act, a) => {
+  for (let i = 0; i < PER_ACT[a]; i++) {
+    const el = document.createElement("i");
+    el.className = "pick";
+    el.style.setProperty("--x", `${48 + 36 * Math.sin(i * 1.9 + a * 1.3)}%`);
+    el.style.setProperty("--y", `${18 + (i + 0.5) * (62 / PER_ACT[a])}%`);
+    act.appendChild(el);
   }
-  addEventListener("resize", resize);
-  resize();
+});
 
-  (function frame(t) {
-    ctx.clearRect(0, 0, W, H);
-    ctx.lineWidth = 4; ctx.shadowColor = "#ffb300"; ctx.shadowBlur = 10;
-    list.forEach((p, i) => {
-      p.y += p.vy;
-      if (p.y > H + 20) list[i] = make(-20);
-      ctx.strokeStyle = "rgba(255,212,0,.85)";
-      ctx.beginPath();
-      // el ancho oscila para simular el giro del anillo
-      ctx.ellipse(p.x, p.y, Math.max(1.5, p.r * Math.abs(Math.cos(t / 400 + p.ph))), p.r, 0, 0, 6.283);
-      ctx.stroke();
+function collect(el) {
+  if (el.classList.contains("got")) return;
+  el.classList.add("got");
+  rings++;
+  $("rings").textContent = rings;
+  $("score").textContent = String(rings * 100).padStart(6, "0");
+  if (window.ding) window.ding();
+  if (resShown) showResults(); // la meta ya está visible: mantenla al día
+}
+// se recogen al pasar por el centro de la pantalla (o con un toque)
+const ringIO = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (!e.isIntersecting) return;
+    ringIO.unobserve(e.target);
+    setTimeout(() => collect(e.target), i * 90);
+  });
+}, { rootMargin: "-35% 0px -35% 0px" });
+document.querySelectorAll(".pick").forEach((p) => { ringIO.observe(p); p.addEventListener("click", () => collect(p)); });
+
+// poste de control: se pone rojo al llegar a cada acto
+const postIO = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    e.target.querySelector(".post").classList.add("hit");
+    postIO.unobserve(e.target);
+  });
+}, { rootMargin: "-25% 0px -45% 0px" });
+document.querySelectorAll(".tag").forEach((t) => postIO.observe(t));
+
+/* --------------------------------------------------------------------------
+   Parallax de personajes + bolita de progreso
+   -------------------------------------------------------------------------- */
+(function scrollFx() {
+  const par = [...document.querySelectorAll("[data-par]")];
+  const ball = $("trackBall");
+  let queued = false;
+  function frame() {
+    queued = false;
+    par.forEach((el) => {
+      const r = el.parentElement.getBoundingClientRect();
+      el.style.setProperty("--py", `${((r.top + r.height / 2 - innerHeight / 2) * el.dataset.par).toFixed(1)}px`);
     });
-    requestAnimationFrame(frame);
-  })(0);
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = max > 0 ? scrollY / max : 0;
+    ball.style.top = `${p * 100}%`;
+    ball.style.transform = `rotate(${p * 4000}deg)`;
+  }
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(frame); } }, { passive: true });
+  if (!reduced) frame();
 })();
 
 /* --------------------------------------------------------------------------
-   Abrir / cerrar invitación
+   Acto 4: elige a tu personaje
    -------------------------------------------------------------------------- */
-(function envelope() {
-  const openBtn = document.getElementById("openBtn");
-  const inv = document.getElementById("invitation");
-  let opened = false;
-
-  function open() {
-    opened = true;
-    openBtn.setAttribute("aria-expanded", "true");
-    if (window.playMusic) window.playMusic();
-    burst();
-    inv.classList.add("show");
-    inv.scrollIntoView({ behavior: "smooth", block: "start" });
+const STATS = ["VELOCIDAD", "DIVERSIÓN", "HAMBRE DE PASTEL"];
+const CHARS = [ // [archivo, nombre, frase, stats]
+  ["sonic", "Sonic", "El más veloz: ¡no llegues tarde!", [100, 95, 70]],
+  ["tails", "Tails", "Tu guía para llegar a la fiesta.", [75, 90, 60]],
+  ["knuckles", "Knuckles", "Guardián del pastel.", [60, 85, 100]],
+  ["amy", "Amy", "Reina de la diversión.", [70, 100, 80]],
+  ["shadow", "Shadow", "Maestro de los juegos.", [95, 80, 75]],
+  ["silver", "Silver", "Viene del futuro, ¡y llega a tiempo!", [65, 88, 85]],
+  ["eggman", "Dr. Eggman", "Prohibido robar los dulces.", [30, 60, 100]],
+];
+(function roster() {
+  const box = $("roster"), img = $("pickImg");
+  function pick(i) {
+    const [id, name, role, v] = CHARS[i];
+    img.src = `assets/${id}.png`;
+    img.alt = name;
+    img.classList.remove("swap"); void img.offsetWidth; img.classList.add("swap");
+    $("pickName").textContent = name;
+    $("pickRole").textContent = role;
+    $("pickStats").innerHTML = STATS.map((s, k) => `<p><span>${s}</span><i style="--v:${v[k]}%"></i></p>`).join("");
+    [...box.children].forEach((b, k) => b.setAttribute("aria-selected", k === i));
   }
-  function close() {
-    opened = false;
-    openBtn.setAttribute("aria-expanded", "false");
-    document.getElementById("cover").scrollIntoView({ behavior: "smooth" });
-    setTimeout(() => { if (!opened) inv.classList.remove("show"); }, 600);
-  }
-  openBtn.addEventListener("click", () => (opened ? close() : open()));
-  document.getElementById("closeBtn").addEventListener("click", close);
+  CHARS.forEach(([id, name], i) => {
+    const b = document.createElement("button");
+    b.className = "mb";
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-label", name);
+    b.innerHTML = `<img src="assets/${id}.png" alt="" loading="lazy">`;
+    b.addEventListener("click", () => pick(i));
+    box.appendChild(b);
+  });
+  pick(0);
 })();
+
+/* --------------------------------------------------------------------------
+   Meta: los puntos suben al llegar
+   -------------------------------------------------------------------------- */
+function count(el, to) {
+  const id = (el.countId = (el.countId || 0) + 1), t0 = performance.now(); // un conteo nuevo cancela el anterior
+  (function step(t) {
+    if (el.countId !== id) return;
+    const k = Math.min(1, (t - t0) / 1200);
+    el.textContent = Math.round(to * k).toLocaleString("es-CO");
+    if (k < 1) requestAnimationFrame(step);
+  })(t0);
+}
+let resShown = false;
+function showResults() {
+  count($("resRings"), rings * 100);
+  count($("resBonus"), BONUS);
+  count($("resTotal"), rings * 100 + BONUS);
+}
+new IntersectionObserver(([e]) => {
+  if (e.isIntersecting && !resShown) { resShown = true; showResults(); }
+}, { threshold: 0.6 }).observe($("results"));
+
+/* --------------------------------------------------------------------------
+   Empezar / volver
+   -------------------------------------------------------------------------- */
+$("openBtn").addEventListener("click", () => {
+  level.classList.add("show");
+  if (window.playMusic) window.playMusic();
+  burst();
+  setTimeout(() => document.querySelector(".a1").scrollIntoView({ behavior: "smooth" }), 60);
+});
+$("replay").addEventListener("click", () => {
+  $("cover").scrollIntoView({ behavior: "smooth" });
+  setTimeout(() => level.classList.remove("show"), 800);
+});
 
 /* Estallido de anillos y confeti */
 function burst() {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (reduced) return;
   const c = document.createElement("canvas");
   c.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:99";
   c.width = innerWidth; c.height = innerHeight;
@@ -104,7 +189,7 @@ function burst() {
   const colors = ["#ffd400", "#1a56db", "#e8222d", "#3cb043", "#ffffff"];
   const bits = Array.from({ length: 110 }, (_, i) => {
     const a = Math.random() * 6.283, s = 3 + Math.random() * 7;
-    return { x: c.width / 2, y: c.height * 0.4, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 5, ring: i % 3 === 0,
+    return { x: c.width / 2, y: c.height * 0.45, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 5, ring: i % 3 === 0,
              col: colors[i % colors.length], a: 1, r: 0 };
   });
   let f = 0;
@@ -117,10 +202,10 @@ function burst() {
       if (b.a > 0) alive = true;
       ctx.globalAlpha = b.a;
       if (b.ring) {
-        ctx.strokeStyle = "#ffd400"; ctx.lineWidth = 3;
+        ctx.strokeStyle = "#ffd400"; ctx.lineWidth = 4; ctx.shadowColor = "#ffb300"; ctx.shadowBlur = 8;
         ctx.beginPath(); ctx.ellipse(b.x, b.y, Math.max(1.5, 9 * Math.abs(Math.cos(b.r))), 9, 0, 0, 6.283); ctx.stroke();
       } else {
-        ctx.fillStyle = b.col; ctx.fillRect(b.x, b.y, 9, 6);
+        ctx.shadowBlur = 0; ctx.fillStyle = b.col; ctx.fillRect(b.x, b.y, 9, 6);
       }
     });
     f++;
@@ -129,26 +214,25 @@ function burst() {
 }
 
 /* --------------------------------------------------------------------------
-   Cuenta regresiva
+   Cuenta regresiva en el marcador
    -------------------------------------------------------------------------- */
 (function countdown() {
-  const ids = ["days", "hours", "minutes", "seconds"].map((id) => document.getElementById(id));
   const pad = (n) => String(n).padStart(2, "0");
   function tick() {
-    const d = Math.max(0, when - Date.now());
-    [Math.floor(d / 864e5), Math.floor(d / 36e5) % 24, Math.floor(d / 6e4) % 60, Math.floor(d / 1e3) % 60]
-      .forEach((v, i) => { ids[i].textContent = pad(v); });
+    const d = when - Date.now();
+    if (d <= 0) { $("cd").textContent = "¡YA!"; return; }
+    $("cd").textContent = `${Math.floor(d / 864e5)}d ${pad(Math.floor(d / 36e5) % 24)}:${pad(Math.floor(d / 6e4) % 60)}:${pad(Math.floor(d / 1e3) % 60)}`;
   }
   tick();
   setInterval(tick, 1000);
 })();
 
 /* --------------------------------------------------------------------------
-   Música chiptune original (Web Audio, sin archivos externos)
+   Música chiptune original + sonido de anillo (Web Audio, sin archivos)
    -------------------------------------------------------------------------- */
 (function music() {
-  const btn = document.getElementById("audioToggle");
-  const label = document.getElementById("audioText");
+  const btn = $("audioToggle");
+  const label = $("audioText");
   const Hz = (n) => 440 * 2 ** ((n - 69) / 12); // n = nota MIDI
   const R = null;
   const BEAT = 0.17;
@@ -156,14 +240,14 @@ function burst() {
   const LEAD = [[76,1],[76,1],[79,1],[76,1],[74,1],[72,1],[74,2],  [72,1],[72,1],[76,1],[72,1],[69,1],[67,1],[69,2],
                 [67,1],[69,1],[71,1],[74,1],[72,2],[R,1],[67,1],  [72,1],[74,1],[76,1],[79,1],[76,3],[R,1]];
   const BASS = [48,48,55,52, 53,53,60,57, 55,55,59,62, 48,52,55,60]; // una nota cada 2 corcheas
-  let ctx = null, timer = null;
+  let ctx = null, master = null, timer = null;
 
   function tone(freq, t, dur, type, vol) {
     const o = ctx.createOscillator(), g = ctx.createGain();
     o.type = type; o.frequency.value = freq;
     g.gain.setValueAtTime(vol, t);
     g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-    o.connect(g); g.connect(ctx.destination);
+    o.connect(g); g.connect(master);
     o.start(t); o.stop(t + dur + 0.02);
   }
   function schedule(start) {
@@ -173,27 +257,36 @@ function burst() {
     return t - start;
   }
   function play() {
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    ctx.resume();
+    master = ctx.createGain();
+    master.connect(ctx.destination);
     const len = schedule(ctx.currentTime + 0.05);
     timer = setInterval(() => schedule(ctx.currentTime + 0.05), len * 1000);
     btn.classList.add("playing"); label.textContent = "Pausar";
   }
   function stop() {
     clearInterval(timer);
-    if (ctx) ctx.close();
-    ctx = null;
+    if (master) master.disconnect(); // corta también las notas ya programadas
+    master = null;
     btn.classList.remove("playing"); label.textContent = "Música";
   }
-  btn.addEventListener("click", () => (ctx ? stop() : play()));
-  window.playMusic = () => { if (!ctx) play(); };
+  btn.addEventListener("click", () => (master ? stop() : play()));
+  window.playMusic = () => { if (!master) play(); };
+  window.ding = () => { // sonido de anillo, solo si el sonido está activado
+    if (!master) return;
+    const t = ctx.currentTime;
+    tone(1318.5, t, 0.09, "square", 0.06);
+    tone(1760, t + 0.07, 0.18, "square", 0.06);
+  };
 })();
 
 /* --------------------------------------------------------------------------
    Compartir
    -------------------------------------------------------------------------- */
 (function share() {
-  const tip = document.getElementById("shareTip");
-  document.getElementById("shareBtn").addEventListener("click", async () => {
+  const tip = $("shareTip");
+  $("shareBtn").addEventListener("click", async () => {
     const data = { title: "Cumpleaños de Juan José", text: "¡Estás invitado al cumpleaños de Juan José! 🦔💙", url: location.href };
     if (navigator.share) { try { await navigator.share(data); return; } catch { /* cancelado */ } }
     try {

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#071a66">
+  <meta name="theme-color" content="#2d7bff">
   <title>Cumpleaños de Juan José · ¡A toda velocidad!</title>
-  <meta name="description" content="Estás invitado al cumpleaños de Juan José Melo Santander. ¡La fiesta más veloz del mundo!">
+  <meta name="description" content="Estás invitado al cumpleaños de Juan José Melo Santander. Recorre el nivel y confirma tu asistencia.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23ffd400' stroke-width='16'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,6 @@
 </head>
 <body>
 
-  <!-- Bolita que corre por la portada -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="ball" viewBox="0 0 100 100">
       <circle cx="50" cy="50" r="46" fill="#1e5bd6"/>
@@ -23,83 +22,96 @@
     </symbol>
   </svg>
 
-  <canvas id="particleCanvas" aria-hidden="true"></canvas>
-
   <button class="audio-toggle" id="audioToggle" aria-label="Activar música" title="Música">🎵 <span id="audioText">Música</span></button>
 
   <main>
-    <!-- ============ PORTADA (pantalla de título) ============ -->
+    <!-- ============ PANTALLA DE TÍTULO ============ -->
     <section class="cover" id="cover">
+      <i class="cloud c1"></i><i class="cloud c2"></i>
       <div class="cover-inner">
-        <p class="zone">ZONA CHAMBÚ · ACTO 1</p>
-        <p class="cover-eyebrow">¡Ven a pasarla súper veloz!</p>
-        <h1 class="cover-title">Juan José</h1>
-        <p class="cover-age">CUMPLE <b data-f="age">?</b> AÑOS</p>
+        <p class="zone">ZONA CHAMBÚ · ¡FIESTA!</p>
+        <h1 class="logo"><span>Juan</span><span>José</span></h1>
+        <div class="ribbon">¡CUMPLE <b data-f="age">?</b> AÑOS!</div>
         <img class="cover-hero" src="assets/grupo.png" alt="Sonic, Tails, Knuckles y Shadow dentro de un anillo dorado">
-        <button class="start-btn" id="openBtn" aria-expanded="false">▶ ¡Toca para empezar!</button>
+        <button class="start-btn" id="openBtn">▶ ¡TOCA PARA EMPEZAR!</button>
       </div>
+      <div class="hills" aria-hidden="true"><i class="hill h1"></i><i class="hill h2"></i></div>
       <svg class="runner" aria-hidden="true"><use href="#ball"/></svg>
       <div class="ground" aria-hidden="true"></div>
     </section>
 
-    <!-- ============ INVITACIÓN ============ -->
-    <section class="invitation" id="invitation">
-      <article class="card">
-        <p class="zone">¡NUEVO RÉCORD DE FIESTA!</p>
-        <h2 class="card-title">Cumpleaños de<br><span>Juan José</span></h2>
-        <p class="card-full">Melo Santander</p>
-        <img class="card-hero" src="assets/sonic-pose.png" alt="Sonic con el pulgar arriba">
+    <!-- ============ EL NIVEL ============ -->
+    <div class="level" id="level">
 
-        <p class="hosts-label">Invitan</p>
-        <p class="hosts">Dalitza Estefanía Santander Martínez<br>y Darío Melo</p>
+      <div class="hud" aria-label="Marcador">
+        <p>PUNTOS <b id="score">000000</b></p>
+        <p><i class="mini-ring"></i>ANILLOS <b id="rings">0</b></p>
+        <p>FALTAN <b id="cd">--</b></p>
+      </div>
+      <div class="track" aria-hidden="true"><svg id="trackBall"><use href="#ball"/></svg></div>
 
-        <div class="hud">
-          <div><b data-f="day">--</b><span class="cap" data-f="month">mes</span><span data-f="year">----</span></div>
-          <div class="hud-sep"></div>
-          <div><b data-f="time">--:--</b><span class="cap" data-f="weekday">día</span></div>
+      <!-- ACTO 1 · quién -->
+      <section class="act a1">
+        <p class="tag"><span class="post"></span>ACTO 1 · ¿QUIÉN CUMPLE?</p>
+        <h2 class="big">Juan<br>José</h2>
+        <p class="surname">MELO SANTANDER</p>
+        <p class="age">¡CUMPLE <b data-f="age">?</b>!</p>
+        <img class="char a1-char" data-par="0.12" src="assets/sonic.png" alt="Sonic">
+        <div class="hosts-box"><small>INVITAN</small><p>Dalitza Estefanía Santander Martínez<br>y Darío Melo</p></div>
+      </section>
+
+      <!-- ACTO 2 · cuándo -->
+      <section class="act a2">
+        <p class="tag"><span class="post"></span>ACTO 2 · ¿CUÁNDO?</p>
+        <div class="date-board">
+          <span class="dow" data-f="weekday">día</span>
+          <span class="day" data-f="day">--</span>
+          <span class="mon"><span data-f="month">mes</span> <span data-f="year">----</span></span>
         </div>
+        <p class="clock" data-f="time">--:--</p>
+        <img class="char a2-char" data-par="-0.12" src="assets/tails.png" alt="Tails volando">
+        <a class="btn btn-blue" id="calLink" target="_blank" rel="noopener">📅 Agendar en mi calendario</a>
+      </section>
 
-        <div class="place">
-          <p class="place-badge">📍 Punto de partida</p>
+      <!-- ACTO 3 · dónde -->
+      <section class="act a3">
+        <p class="tag"><span class="post"></span>ACTO 3 · ¿DÓNDE?</p>
+        <div class="sign">
+          <small>PUNTO DE PARTIDA ➜</small>
           <h3 data-f="place">Lugar</h3>
           <p data-f="city">Ciudad</p>
-          <div class="btn-row">
-            <a class="btn btn-blue" id="mapsLink" target="_blank" rel="noopener">🗺️ Ver en Google Maps</a>
-            <a class="btn btn-blue" id="calLink" target="_blank" rel="noopener">📅 Agendar en Calendario</a>
-          </div>
         </div>
+        <img class="char a3-char" data-par="0.1" src="assets/knuckles.png" alt="Knuckles">
+        <a class="btn btn-blue" id="mapsLink" target="_blank" rel="noopener">🗺️ Ver en Google Maps</a>
+      </section>
 
-        <div class="countdown">
-          <p>Faltan para la salida...</p>
-          <div class="cd-grid">
-            <div><b id="days">00</b><span>Días</span></div>
-            <div><b id="hours">00</b><span>Horas</span></div>
-            <div><b id="minutes">00</b><span>Min</span></div>
-            <div><b id="seconds">00</b><span>Seg</span></div>
-          </div>
+      <!-- ACTO 4 · equipo -->
+      <section class="act a4">
+        <p class="tag"><span class="post"></span>ACTO 4 · ELIGE A TU PERSONAJE</p>
+        <div class="stage">
+          <img id="pickImg" alt="">
+          <h3 id="pickName"></h3>
+          <p id="pickRole"></p>
+          <div class="stats" id="pickStats"></div>
         </div>
+        <div class="roster" id="roster" role="tablist" aria-label="Personajes"></div>
+      </section>
 
-        <h3 class="team-title">El equipo ya está listo</h3>
-        <div class="team">
-          <div class="hero-card"><div class="medal"><img src="assets/sonic.png" alt="" loading="lazy"></div><b>Sonic</b><span>El más veloz: ¡no llegues tarde!</span></div>
-          <div class="hero-card"><div class="medal"><img src="assets/tails.png" alt="" loading="lazy"></div><b>Tails</b><span>Tu guía para llegar a la fiesta.</span></div>
-          <div class="hero-card"><div class="medal"><img src="assets/knuckles.png" alt="" loading="lazy"></div><b>Knuckles</b><span>Guardián del pastel.</span></div>
-          <div class="hero-card"><div class="medal"><img src="assets/amy.png" alt="" loading="lazy"></div><b>Amy</b><span>Reina de la diversión.</span></div>
-          <div class="hero-card"><div class="medal"><img src="assets/shadow.png" alt="" loading="lazy"></div><b>Shadow</b><span>Maestro de los juegos.</span></div>
-          <div class="hero-card"><div class="medal"><img src="assets/silver.png" alt="" loading="lazy"></div><b>Silver</b><span>Viene del futuro, ¡y llega a tiempo!</span></div>
-          <div class="hero-card"><div class="medal"><img src="assets/eggman.png" alt="" loading="lazy"></div><b>Dr. Eggman</b><span>Prohibido robar los dulces.</span></div>
+      <!-- META · resultados -->
+      <section class="act a5">
+        <p class="tag"><span class="post"></span>¡ACTO COMPLETADO!</p>
+        <h2 class="big">¡Llegaste<br>a la meta!</h2>
+        <img class="a5-char" src="assets/sonic-pose.png" alt="Sonic con el pulgar arriba">
+        <div class="results" id="results">
+          <p><span>ANILLOS × 100</span><b id="resRings">0</b></p>
+          <p><span>BONUS FIESTA</span><b id="resBonus">0</b></p>
+          <p class="total"><span>TOTAL</span><b id="resTotal">0</b></p>
         </div>
-
-        <div class="rsvp">
-          <h3>¿Te unes a la carrera?</h3>
-          <p>Confirma tu asistencia por WhatsApp.</p>
-          <a class="btn btn-wa" id="waLink" target="_blank" rel="noopener">💬 ¡Cuenta conmigo!</a>
-        </div>
-
+        <a class="btn btn-wa" id="waLink" target="_blank" rel="noopener">💬 ¡CONFIRMO MI ASISTENCIA!</a>
         <p class="closing">¡Gracias por acompañarnos! 💙</p>
-        <button class="btn btn-ghost" id="closeBtn">▲ Cerrar invitación</button>
-      </article>
-    </section>
+        <button class="btn btn-ghost" id="replay">↺ Volver al inicio</button>
+      </section>
+    </div>
   </main>
 
   <button class="share-btn" id="shareBtn" aria-label="Compartir invitación">🔗</button>

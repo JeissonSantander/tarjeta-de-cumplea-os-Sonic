@@ -8,10 +8,15 @@ Fecha, calendario, mapa, cuenta regresiva y mensaje de WhatsApp se calculan solo
 
 > ⚠ `age` y `start` son provisionales hasta confirmar con los papás.
 
+## Cómo funciona
+La invitación es un "nivel" de Sonic: pantalla de título → 4 actos (quién, cuándo, dónde, equipo) → meta con
+resultados y botón de confirmación por WhatsApp. Los anillos se recogen al avanzar y suman al marcador.
+
 ## Estructura
-- `index.html` — portada, invitación y personajes (SVG inline)
+- `index.html` — pantalla de título, actos y meta
 - `styles.css` — diseño responsive
-- `script.js` — datos del evento, anillos, cuenta regresiva, música chiptune y compartir
+- `script.js` — datos del evento, anillos, marcador, selector de personajes, música chiptune y compartir
+- `assets/` — personajes recortados con fondo transparente
 - `.nojekyll` — configuración para GitHub Pages
 
 ## Publicar
