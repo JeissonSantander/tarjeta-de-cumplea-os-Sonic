@@ -37,90 +37,70 @@ $("waLink").href =
   `https://wa.me/${EVENT.phone}?text=${q("Hola Dalitza y Darío, confirmo mi asistencia al cumpleaños de Juan José 🦔💙")}`;
 
 /* --------------------------------------------------------------------------
-   Anillos para recoger: aparecen en cada acto y se cuentan en el marcador
+   Navegación entre pantallas: toque (derecha/izquierda), deslizar, flechas, barras
    -------------------------------------------------------------------------- */
-const level = $("level");
-let rings = 0;
-const BONUS = 10000;
-const PER_ACT = [5, 4, 4, 4, 3];
+const story = $("story");
+const slides = [...story.querySelectorAll(".slide")];
+const bars = [...$("bars").children];
+let cur = 0, started = false;
+bars[0].classList.add("full");
 
-document.querySelectorAll(".act").forEach((act, a) => {
-  for (let i = 0; i < PER_ACT[a]; i++) {
-    const el = document.createElement("i");
-    el.className = "pick";
-    el.style.setProperty("--x", `${48 + 36 * Math.sin(i * 1.9 + a * 1.3)}%`);
-    el.style.setProperty("--y", `${18 + (i + 0.5) * (62 / PER_ACT[a])}%`);
-    act.appendChild(el);
-  }
+function go(n) {
+  n = Math.max(0, Math.min(slides.length - 1, n));
+  if (n === cur) return;
+  if (!started) { started = true; if (window.playMusic) window.playMusic(); } // el primer toque inicia la música
+  cur = n;
+  story.dataset.i = n;
+  slides.forEach((s, i) => {
+    s.classList.toggle("on", i === n);
+    s.classList.toggle("before", i < n);
+    if (i !== n) s.scrollTop = 0;
+  });
+  bars.forEach((b, i) => b.classList.toggle("full", i <= n));
+  if (window.sfx) window.sfx([659, 880], 0.06);
+  if (n === slides.length - 1) burst();
+}
+
+$("nextBtn").addEventListener("click", () => go(cur + 1));
+$("prevBtn").addEventListener("click", () => go(cur - 1));
+$("replay").addEventListener("click", () => go(0));
+bars.forEach((b, i) => b.addEventListener("click", () => go(i)));
+document.querySelectorAll("[data-next]").forEach((b) => b.addEventListener("click", () => go(cur + 1)));
+addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") go(cur + 1);
+  if (e.key === "ArrowLeft") go(cur - 1);
 });
 
-function collect(el) {
-  if (el.classList.contains("got")) return;
-  el.classList.add("got");
-  rings++;
-  $("rings").textContent = rings;
-  $("score").textContent = String(rings * 100).padStart(6, "0");
-  ["rings", "score"].forEach((id) => { const b = $(id); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); });
-  if (window.sfx) window.sfx([1318.5, 1760]);
-  if (resShown) showResults(); // la meta ya está visible: mantenla al día
-}
-// se recogen al pasar por el centro de la pantalla (o con un toque)
-const ringIO = new IntersectionObserver((entries) => {
-  entries.forEach((e, i) => {
-    if (!e.isIntersecting) return;
-    ringIO.unobserve(e.target);
-    setTimeout(() => collect(e.target), i * 90);
-  });
-}, { rootMargin: "-35% 0px -35% 0px" });
-document.querySelectorAll(".pick").forEach((p) => { ringIO.observe(p); p.addEventListener("click", () => collect(p)); });
+let x0 = null, y0 = 0;
+story.addEventListener("pointerdown", (e) => { x0 = e.clientX; y0 = e.clientY; });
+story.addEventListener("pointercancel", () => { x0 = null; });
+story.addEventListener("pointerup", (e) => {
+  if (x0 === null) return;
+  const dx = e.clientX - x0, dy = e.clientY - y0;
+  x0 = null;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) return go(cur + (dx < 0 ? 1 : -1)); // deslizar
+  if (Math.abs(dx) > 10 || Math.abs(dy) > 10) return;                                        // era un scroll
+  if (e.target.closest("a, button, .tapme")) return;                                          // toque en un control
+  const r = story.getBoundingClientRect();
+  go(cur + (e.clientX - r.left < r.width * 0.3 ? -1 : 1));                                    // lado izquierdo = atrás
+});
 
-// textos y personajes entran con efecto al aparecer en pantalla
-const rvIO = new IntersectionObserver((entries) => {
-  entries.forEach((e) => {
-    if (!e.isIntersecting) return;
-    const sibs = [...e.target.parentElement.children].filter((c) => c.classList.contains("rv") || c.classList.contains("char"));
-    e.target.style.transitionDelay = `${Math.min(sibs.indexOf(e.target), 6) * 90}ms`;
-    e.target.classList.add("on");
-    rvIO.unobserve(e.target);
-  });
-}, { threshold: 0.15 });
-document.querySelectorAll(".act > :not(.pick):not(.char)").forEach((el) => { el.classList.add("rv"); rvIO.observe(el); });
-document.querySelectorAll(".char").forEach((el) => rvIO.observe(el));
-
-// poste de control: se pone rojo al llegar a cada acto
-const postIO = new IntersectionObserver((entries) => {
-  entries.forEach((e) => {
-    if (!e.isIntersecting) return;
-    e.target.querySelector(".post").classList.add("hit");
-    postIO.unobserve(e.target);
-  });
-}, { rootMargin: "-25% 0px -45% 0px" });
-document.querySelectorAll(".tag").forEach((t) => postIO.observe(t));
-
-/* --------------------------------------------------------------------------
-   Parallax de personajes + bolita de progreso
-   -------------------------------------------------------------------------- */
-(function scrollFx() {
-  const par = [...document.querySelectorAll("[data-par]")];
-  const ball = $("trackBall");
-  let queued = false;
-  function frame() {
-    queued = false;
-    par.forEach((el) => {
-      const r = el.parentElement.getBoundingClientRect();
-      el.style.setProperty("--py", `${((r.top + r.height / 2 - innerHeight / 2) * el.dataset.par).toFixed(1)}px`);
-    });
-    const max = document.documentElement.scrollHeight - innerHeight;
-    const p = max > 0 ? scrollY / max : 0;
-    ball.style.top = `${p * 100}%`;
-    ball.style.transform = `rotate(${p * 4000}deg)`;
+/* Anillos dorados que suben flotando en cada pantalla */
+slides.forEach((s) => {
+  const fx = document.createElement("div");
+  fx.className = "fx";
+  for (let i = 0; i < 7; i++) {
+    const b = document.createElement("b");
+    const size = 14 + Math.random() * 16;
+    b.style.cssText = `left:${Math.random() * 100}%;width:${size}px;height:${size}px;--dx:${(Math.random() - 0.5) * 80}px;` +
+      `animation-duration:${7 + Math.random() * 7}s,1.4s;animation-delay:-${Math.random() * 12}s,0s`;
+    fx.appendChild(b);
   }
-  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(frame); } }, { passive: true });
-  if (!reduced) frame();
-})();
+  s.prepend(fx);
+});
 
 /* --------------------------------------------------------------------------
-   Acto 4: elige a tu personaje
+   Elige a tu personaje
    -------------------------------------------------------------------------- */
 const STATS = ["VELOCIDAD", "DIVERSIÓN", "HAMBRE DE PASTEL"];
 const CHARS = [ // [archivo, nombre, frase, stats, movimiento (clase m-… en el CSS)]
@@ -158,47 +138,15 @@ const CHARS = [ // [archivo, nombre, frase, stats, movimiento (clase m-… en el
   pick(0);
 })();
 
-/* --------------------------------------------------------------------------
-   Meta: los puntos suben al llegar
-   -------------------------------------------------------------------------- */
-function count(el, to) {
-  const id = (el.countId = (el.countId || 0) + 1), t0 = performance.now(); // un conteo nuevo cancela el anterior
-  (function step(t) {
-    if (el.countId !== id) return;
-    const k = Math.min(1, (t - t0) / 1200);
-    el.textContent = Math.round(to * k).toLocaleString("es-CO");
-    if (k < 1) requestAnimationFrame(step);
-  })(t0);
-}
-let resShown = false;
-function showResults() {
-  count($("resRings"), rings * 100);
-  count($("resBonus"), BONUS);
-  count($("resTotal"), rings * 100 + BONUS);
-}
-new IntersectionObserver(([e]) => {
-  if (e.isIntersecting && !resShown) { resShown = true; showResults(); burst(); }
-}, { threshold: 0.6 }).observe($("results"));
+/* Tocar un personaje: da una vuelta y suena */
+document.querySelectorAll(".tapme").forEach((box) => box.addEventListener("click", () => {
+  const img = box.querySelector("img");
+  img.classList.remove("spun"); void img.offsetWidth; img.classList.add("spun");
+  img.addEventListener("animationend", () => img.classList.remove("spun"), { once: true });
+  if (window.sfx) window.sfx([392, 523, 659], 0.05);
+}));
 
-/* --------------------------------------------------------------------------
-   Empezar / volver
-   -------------------------------------------------------------------------- */
-$("openBtn").addEventListener("click", () => {
-  const dash = $("dash"); // Sonic cruza la pantalla en bolita antes de entrar al nivel
-  dash.classList.remove("on"); void dash.offsetWidth; dash.classList.add("on");
-  setTimeout(() => dash.classList.remove("on"), 1000);
-  level.classList.add("show");
-  if (window.playMusic) window.playMusic();
-  if (window.sfx) window.sfx([523, 659, 784, 1047], 0.07);
-  setTimeout(burst, 350);
-  setTimeout(() => document.querySelector(".a1").scrollIntoView({ behavior: "smooth" }), 400);
-});
-$("replay").addEventListener("click", () => {
-  $("cover").scrollIntoView({ behavior: "smooth" });
-  setTimeout(() => level.classList.remove("show"), 800);
-});
-
-/* Estallido de anillos y confeti */
+/* Estallido de anillos y confeti (al llegar a la última pantalla) */
 function burst() {
   if (reduced) return;
   const c = document.createElement("canvas");
@@ -209,7 +157,7 @@ function burst() {
   const colors = ["#ffd400", "#1a56db", "#e8222d", "#3cb043", "#ffffff"];
   const bits = Array.from({ length: 110 }, (_, i) => {
     const a = Math.random() * 6.283, s = 3 + Math.random() * 7;
-    return { x: c.width / 2, y: c.height * 0.45, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 5, ring: i % 3 === 0,
+    return { x: c.width / 2, y: c.height * 0.4, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 5, ring: i % 3 === 0,
              col: colors[i % colors.length], a: 1, r: 0 };
   });
   let f = 0;
@@ -234,21 +182,22 @@ function burst() {
 }
 
 /* --------------------------------------------------------------------------
-   Cuenta regresiva en el marcador
+   Cuenta regresiva
    -------------------------------------------------------------------------- */
 (function countdown() {
+  const els = ["days", "hours", "minutes", "seconds"].map($);
   const pad = (n) => String(n).padStart(2, "0");
   function tick() {
-    const d = when - Date.now();
-    if (d <= 0) { $("cd").textContent = "¡YA!"; return; }
-    $("cd").textContent = `${Math.floor(d / 864e5)}d ${pad(Math.floor(d / 36e5) % 24)}:${pad(Math.floor(d / 6e4) % 60)}:${pad(Math.floor(d / 1e3) % 60)}`;
+    const d = Math.max(0, when - Date.now());
+    [Math.floor(d / 864e5), Math.floor(d / 36e5) % 24, Math.floor(d / 6e4) % 60, Math.floor(d / 1e3) % 60]
+      .forEach((v, i) => { els[i].textContent = pad(v); });
   }
   tick();
   setInterval(tick, 1000);
 })();
 
 /* --------------------------------------------------------------------------
-   Música chiptune original + sonido de anillo (Web Audio, sin archivos)
+   Música chiptune original + efectos (Web Audio, sin archivos)
    -------------------------------------------------------------------------- */
 (function music() {
   const btn = $("audioToggle");
@@ -293,33 +242,11 @@ function burst() {
   }
   btn.addEventListener("click", () => (master ? stop() : play()));
   window.playMusic = () => { if (!master) play(); };
-  window.sfx = (notes, step = 0.07) => { // efectos (anillo, toques…), solo si el sonido está activado
+  window.sfx = (notes, step = 0.07) => { // efectos de sonido, solo si el sonido está activado
     if (!master) return;
     const t = ctx.currentTime;
     notes.forEach((f, i) => tone(f, t + i * step, step * 2, "square", 0.06));
   };
-})();
-
-/* --------------------------------------------------------------------------
-   Tocar un personaje: da una vuelta y suena
-   -------------------------------------------------------------------------- */
-document.querySelectorAll(".tapme").forEach((box) => box.addEventListener("click", () => {
-  const img = box.querySelector("img");
-  img.classList.remove("spun"); void img.offsetWidth; img.classList.add("spun");
-  img.addEventListener("animationend", () => img.classList.remove("spun"), { once: true });
-  if (window.sfx) window.sfx([392, 523, 659], 0.05);
-}));
-
-/* Confeti que cae en la portada */
-(function coverConfetti() {
-  const box = $("confetti");
-  const colors = ["#ffd31a", "#ff9a00", "#e8212e", "#19e6ff", "#ffffff", "#3cb043"];
-  for (let i = 0; i < 26; i++) {
-    const b = document.createElement("b");
-    b.style.cssText = `left:${Math.random() * 100}%;background:${colors[i % colors.length]};` +
-      `animation-duration:${5 + Math.random() * 6}s;animation-delay:-${Math.random() * 10}s`;
-    box.appendChild(b);
-  }
 })();
 
 /* --------------------------------------------------------------------------

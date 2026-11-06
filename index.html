@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#1f63e8">
+  <meta name="theme-color" content="#0a2a9a">
   <title>Cumpleaños de Juan José · ¡A toda velocidad!</title>
-  <meta name="description" content="Estás invitado al cumpleaños de Juan José Melo Santander. Recorre el nivel y confirma tu asistencia.">
+  <meta name="description" content="Estás invitado al cumpleaños de Juan José Melo Santander. ¡Desliza y confirma tu asistencia!">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23ffd400' stroke-width='16'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,136 +13,108 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="story" id="story" data-i="0">
 
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="ball" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="46" fill="#1e5bd6"/>
-      <path d="M50 50 m0 -34 a34 34 0 1 1 -34 34 M50 50 m0 -18 a18 18 0 1 1 -18 18" stroke="#7fb2ff" stroke-width="7" fill="none" stroke-linecap="round"/>
-      <circle cx="50" cy="50" r="6" fill="#f6c9a0"/>
-    </symbol>
-  </svg>
+    <div class="bars" id="bars">
+      <button aria-label="Pantalla 1"><i></i></button>
+      <button aria-label="Pantalla 2"><i></i></button>
+      <button aria-label="Pantalla 3"><i></i></button>
+      <button aria-label="Pantalla 4"><i></i></button>
+    </div>
+    <button class="audio-toggle" id="audioToggle" aria-label="Activar música" title="Música">🎵 <span id="audioText">Música</span></button>
 
-  <button class="audio-toggle" id="audioToggle" aria-label="Activar música" title="Música">🎵 <span id="audioText">Música</span></button>
+    <!-- ============ 1 · PÓSTER DE PORTADA ============ -->
+    <section class="slide s1 on">
+      <svg class="arc a" style="--i:0" viewBox="0 0 400 110" aria-label="¡Ven a pasarla súper veloz!">
+        <defs><path id="arcPath" d="M16 104 Q200 -14 384 104"/></defs>
+        <text><textPath href="#arcPath" startOffset="50%" text-anchor="middle">¡VEN A PASARLA SÚPER VELOZ!</textPath></text>
+      </svg>
 
-  <main>
-    <!-- ============ PANTALLA DE TÍTULO ============ -->
-    <section class="cover" id="cover">
-      <div class="rays" aria-hidden="true"></div>
-      <div class="confetti" id="confetti" aria-hidden="true"></div>
-      <div class="bunting" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <i class="cloud c1"></i><i class="cloud c2"></i>
-      <img class="flyby" src="assets/tails.png" alt="" aria-hidden="true">
-
-      <div class="cover-inner">
-        <p class="zone">ZONA CHAMBÚ · ¡FIESTA!</p>
-        <h1 class="logo"><span>Juan</span><span>José</span></h1>
-        <div class="ribbon">¡CUMPLE <b data-f="age">?</b> AÑOS!</div>
-        <div class="portal tapme">
-          <div class="portal-sky"></div>
-          <div class="portal-ring"></div>
-          <img class="portal-char" src="assets/sonic-pose.png" alt="Sonic saliendo de un anillo dorado">
-        </div>
-        <button class="start-btn" id="openBtn">▶ ¡TOCA PARA EMPEZAR!</button>
+      <div class="hero a" style="--i:1">
+        <svg class="bolt-line" viewBox="0 0 600 90" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="0,46 60,30 90,56 150,22 200,60 260,34 300,50"/>
+          <polyline points="600,44 540,60 505,30 450,64 400,28 340,56 300,50"/>
+          <polyline points="150,22 170,6 160,20 190,0" class="br"/>
+          <polyline points="450,64 470,84 456,70 486,90" class="br"/>
+        </svg>
+        <div class="ring3d"></div>
+        <img class="hero-char" src="assets/sonic.png" alt="Sonic saliendo de un anillo dorado">
       </div>
 
-      <div class="hills" aria-hidden="true"><i class="hill h1"></i><i class="hill h2"></i></div>
-      <svg class="runner" aria-hidden="true"><use href="#ball"/></svg>
-      <div class="ground" aria-hidden="true"></div>
+      <h1 class="name a" style="--i:2">JUAN<br>JOSÉ</h1>
+      <div class="age-orb a" style="--i:3"><b data-f="age">?</b><span>AÑOS</span></div>
+      <button class="go a" style="--i:4" data-next>▶ ABRIR INVITACIÓN</button>
     </section>
 
-    <!-- ============ EL NIVEL ============ -->
-    <div class="level" id="level">
+    <!-- ============ 2 · CUÁNDO Y DÓNDE ============ -->
+    <section class="slide s2">
+      <img class="deco tails m-fly" src="assets/tails.png" alt="" aria-hidden="true">
+      <p class="chip a" style="--i:0">¿CUÁNDO Y DÓNDE?</p>
 
-      <div class="hud" aria-label="Marcador">
-        <p>PUNTOS <b id="score">000000</b></p>
-        <p><i class="mini-ring"></i>ANILLOS <b id="rings">0</b></p>
-        <p>FALTAN <b id="cd">--</b></p>
+      <div class="when a" style="--i:1">
+        <div class="when-d">
+          <b data-f="day">--</b>
+          <span class="up" data-f="month">mes</span>
+          <small data-f="year">----</small>
+        </div>
+        <i class="chain" aria-hidden="true"></i>
+        <div class="when-t">
+          <b data-f="time">--:--</b>
+          <span class="up" data-f="weekday">día</span>
+        </div>
       </div>
-      <div class="track" aria-hidden="true"><svg id="trackBall"><use href="#ball"/></svg></div>
 
-      <!-- ACTO 1 · quién -->
-      <section class="act a1">
-        <p class="tag"><span class="post"></span>ACTO 1 · ¿QUIÉN CUMPLE?</p>
-        <h2 class="big">Juan<br>José</h2>
-        <p class="surname">MELO SANTANDER</p>
-        <p class="age">¡CUMPLE <b data-f="age">?</b>!</p>
-        <div class="char a1-char tapme" data-par="0.12"><img class="m-jump" src="assets/sonic.png" alt="Sonic saltando"></div>
-        <div class="hosts-box"><small>INVITAN</small><p>Dalitza Estefanía Santander Martínez<br>y Darío Melo</p></div>
-      </section>
+      <div class="sign a" style="--i:2">
+        <small>PUNTO DE PARTIDA ➜</small>
+        <h3 data-f="place">Lugar</h3>
+        <p data-f="city">Ciudad</p>
+      </div>
 
-      <!-- ACTO 2 · cuándo -->
-      <section class="act a2">
-        <p class="tag"><span class="post"></span>ACTO 2 · ¿CUÁNDO?</p>
-        <div class="orb">
-          <svg class="bolts" viewBox="0 0 300 300" aria-hidden="true">
-            <polyline points="250,150 272,136 262,153 294,138"/>
-            <polyline points="50,150 28,164 38,147 6,162"/>
-            <polyline points="150,50 136,28 153,38 138,6"/>
-            <polyline points="150,250 164,272 147,262 162,294"/>
-            <polyline points="220,80 242,60 232,80 258,54"/>
-            <polyline points="80,220 58,240 78,230 52,258"/>
-            <polyline points="220,220 244,240 226,230 252,260"/>
-            <polyline points="80,80 56,60 76,72 48,48"/>
-          </svg>
-          <span class="dow" data-f="weekday">día</span>
-          <span class="day" data-f="day">--</span>
-          <span class="mon"><span data-f="month">mes</span> <span data-f="year">----</span></span>
+      <div class="btn-row a" style="--i:3">
+        <a class="btn btn-blue" id="mapsLink" target="_blank" rel="noopener">🗺️ Cómo llegar</a>
+        <a class="btn btn-blue" id="calLink" target="_blank" rel="noopener">📅 Agendar</a>
+      </div>
+
+      <div class="cd a" style="--i:4">
+        <p>FALTAN</p>
+        <div>
+          <span><b id="days">00</b>días</span>
+          <span><b id="hours">00</b>horas</span>
+          <span><b id="minutes">00</b>min</span>
+          <span><b id="seconds">00</b>seg</span>
         </div>
-        <p class="clock" data-f="time">--:--</p>
-        <div class="char a2-char tapme" data-par="-0.12"><img class="m-fly" src="assets/tails.png" alt="Tails volando"></div>
-        <a class="btn btn-blue" id="calLink" target="_blank" rel="noopener">📅 Agendar en mi calendario</a>
-      </section>
+      </div>
+    </section>
 
-      <!-- ACTO 3 · dónde -->
-      <section class="act a3">
-        <p class="tag"><span class="post"></span>ACTO 3 · ¿DÓNDE?</p>
-        <div class="sign">
-          <small>PUNTO DE PARTIDA ➜</small>
-          <h3 data-f="place">Lugar</h3>
-          <p data-f="city">Ciudad</p>
-        </div>
-        <div class="char a3-char tapme" data-par="0.1"><img class="m-punch" src="assets/knuckles.png" alt="Knuckles"></div>
-        <a class="btn btn-blue" id="mapsLink" target="_blank" rel="noopener">🗺️ Ver en Google Maps</a>
-      </section>
+    <!-- ============ 3 · EL EQUIPO ============ -->
+    <section class="slide s3">
+      <p class="chip a" style="--i:0">ELIGE A TU PERSONAJE</p>
+      <div class="stage a" style="--i:1">
+        <div id="pickWrap" class="tapme"><img id="pickImg" alt=""></div>
+        <h3 id="pickName"></h3>
+        <p id="pickRole"></p>
+        <div class="stats" id="pickStats"></div>
+      </div>
+      <div class="roster a" style="--i:2" id="roster" role="tablist" aria-label="Personajes"></div>
+    </section>
 
-      <!-- ACTO 4 · equipo -->
-      <section class="act a4">
-        <p class="tag"><span class="post"></span>ACTO 4 · ELIGE A TU PERSONAJE</p>
-        <div class="stage">
-          <div id="pickWrap" class="tapme"><img id="pickImg" alt=""></div>
-          <h3 id="pickName"></h3>
-          <p id="pickRole"></p>
-          <div class="stats" id="pickStats"></div>
-        </div>
-        <div class="roster" id="roster" role="tablist" aria-label="Personajes"></div>
-      </section>
+    <!-- ============ 4 · CONFIRMAR ============ -->
+    <section class="slide s4">
+      <p class="chip a" style="--i:0">¡TE ESPERAMOS!</p>
+      <h2 class="big a" style="--i:1">¿Vienes a<br>la carrera?</h2>
+      <div class="group tapme a" style="--i:2"><img class="m-hover" src="assets/grupo.png" alt="Sonic, Tails, Knuckles y Shadow"></div>
+      <div class="hosts a" style="--i:3"><small>INVITAN</small><p>Dalitza Estefanía Santander Martínez<br>y Darío Melo</p></div>
+      <a class="btn btn-wa a" style="--i:4" id="waLink" target="_blank" rel="noopener">💬 ¡CONFIRMO MI ASISTENCIA!</a>
+      <div class="btn-row a" style="--i:5">
+        <button class="btn btn-ghost" id="shareBtn">🔗 Compartir</button>
+        <button class="btn btn-ghost" id="replay">↺ Ver de nuevo</button>
+      </div>
+    </section>
 
-      <!-- META · resultados -->
-      <section class="act a5">
-        <p class="tag"><span class="post"></span>¡ACTO COMPLETADO!</p>
-        <h2 class="big">¡Llegaste<br>a la meta!</h2>
-        <div class="a5-char tapme"><img class="m-hover" src="assets/grupo.png" alt="Sonic, Tails, Knuckles y Shadow"></div>
-        <div class="results" id="results">
-          <p><span>ANILLOS × 100</span><b id="resRings">0</b></p>
-          <p><span>BONUS FIESTA</span><b id="resBonus">0</b></p>
-          <p class="total"><span>TOTAL</span><b id="resTotal">0</b></p>
-        </div>
-        <a class="btn btn-wa" id="waLink" target="_blank" rel="noopener">💬 ¡CONFIRMO MI ASISTENCIA!</a>
-        <p class="closing">¡Gracias por acompañarnos! 💙</p>
-        <button class="btn btn-ghost" id="replay">↺ Volver al inicio</button>
-      </section>
-    </div>
-  </main>
-
-  <!-- carrera de Sonic al pulsar empezar -->
-  <div class="dash" id="dash" aria-hidden="true">
-    <i style="top:14%"></i><i style="top:28%;animation-delay:.08s"></i><i style="top:44%;animation-delay:.16s"></i>
-    <i style="top:58%;animation-delay:.04s"></i><i style="top:72%;animation-delay:.12s"></i><i style="top:86%;animation-delay:.2s"></i>
-    <svg><use href="#ball"/></svg>
+    <button class="nav prev" id="prevBtn" aria-label="Pantalla anterior">‹</button>
+    <button class="nav next" id="nextBtn" aria-label="Pantalla siguiente">›</button>
+    <div class="share-tip" id="shareTip">¡Enlace copiado! 💙</div>
   </div>
-
-  <button class="share-btn" id="shareBtn" aria-label="Compartir invitación">🔗</button>
-  <div class="share-tip" id="shareTip">¡Enlace copiado! 💙</div>
 
   <script src="script.js"></script>
 </body>
