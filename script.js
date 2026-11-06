@@ -60,7 +60,8 @@ function collect(el) {
   rings++;
   $("rings").textContent = rings;
   $("score").textContent = String(rings * 100).padStart(6, "0");
-  if (window.ding) window.ding();
+  ["rings", "score"].forEach((id) => { const b = $(id); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); });
+  if (window.sfx) window.sfx([1318.5, 1760]);
   if (resShown) showResults(); // la meta ya está visible: mantenla al día
 }
 // se recogen al pasar por el centro de la pantalla (o con un toque)
@@ -72,6 +73,19 @@ const ringIO = new IntersectionObserver((entries) => {
   });
 }, { rootMargin: "-35% 0px -35% 0px" });
 document.querySelectorAll(".pick").forEach((p) => { ringIO.observe(p); p.addEventListener("click", () => collect(p)); });
+
+// textos y personajes entran con efecto al aparecer en pantalla
+const rvIO = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const sibs = [...e.target.parentElement.children].filter((c) => c.classList.contains("rv") || c.classList.contains("char"));
+    e.target.style.transitionDelay = `${Math.min(sibs.indexOf(e.target), 6) * 90}ms`;
+    e.target.classList.add("on");
+    rvIO.unobserve(e.target);
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll(".act > :not(.pick):not(.char)").forEach((el) => { el.classList.add("rv"); rvIO.observe(el); });
+document.querySelectorAll(".char").forEach((el) => rvIO.observe(el));
 
 // poste de control: se pone rojo al llegar a cada acto
 const postIO = new IntersectionObserver((entries) => {
@@ -109,22 +123,24 @@ document.querySelectorAll(".tag").forEach((t) => postIO.observe(t));
    Acto 4: elige a tu personaje
    -------------------------------------------------------------------------- */
 const STATS = ["VELOCIDAD", "DIVERSIÓN", "HAMBRE DE PASTEL"];
-const CHARS = [ // [archivo, nombre, frase, stats]
-  ["sonic", "Sonic", "El más veloz: ¡no llegues tarde!", [100, 95, 70]],
-  ["tails", "Tails", "Tu guía para llegar a la fiesta.", [75, 90, 60]],
-  ["knuckles", "Knuckles", "Guardián del pastel.", [60, 85, 100]],
-  ["amy", "Amy", "Reina de la diversión.", [70, 100, 80]],
-  ["shadow", "Shadow", "Maestro de los juegos.", [95, 80, 75]],
-  ["silver", "Silver", "Viene del futuro, ¡y llega a tiempo!", [65, 88, 85]],
-  ["eggman", "Dr. Eggman", "Prohibido robar los dulces.", [30, 60, 100]],
+const CHARS = [ // [archivo, nombre, frase, stats, movimiento (clase m-… en el CSS)]
+  ["sonic", "Sonic", "El más veloz: ¡no llegues tarde!", [100, 95, 70], "jump"],
+  ["tails", "Tails", "Tu guía para llegar a la fiesta.", [75, 90, 60], "fly"],
+  ["knuckles", "Knuckles", "Guardián del pastel.", [60, 85, 100], "punch"],
+  ["amy", "Amy", "Reina de la diversión.", [70, 100, 80], "sway"],
+  ["shadow", "Shadow", "Maestro de los juegos.", [95, 80, 75], "glide"],
+  ["silver", "Silver", "Viene del futuro, ¡y llega a tiempo!", [65, 88, 85], "float"],
+  ["eggman", "Dr. Eggman", "Prohibido robar los dulces.", [30, 60, 100], "hover"],
 ];
 (function roster() {
-  const box = $("roster"), img = $("pickImg");
-  function pick(i) {
-    const [id, name, role, v] = CHARS[i];
+  const box = $("roster"), img = $("pickImg"), wrap = $("pickWrap");
+  function pick(i, fromTap) {
+    const [id, name, role, v, move] = CHARS[i];
     img.src = `assets/${id}.png`;
     img.alt = name;
-    img.classList.remove("swap"); void img.offsetWidth; img.classList.add("swap");
+    img.className = `m-${move}`;
+    wrap.classList.remove("swap"); void wrap.offsetWidth; wrap.classList.add("swap");
+    if (fromTap && window.sfx) window.sfx([660, 880]);
     $("pickName").textContent = name;
     $("pickRole").textContent = role;
     $("pickStats").innerHTML = STATS.map((s, k) => `<p><span>${s}</span><i style="--v:${v[k]}%"></i></p>`).join("");
@@ -136,7 +152,7 @@ const CHARS = [ // [archivo, nombre, frase, stats]
     b.setAttribute("role", "tab");
     b.setAttribute("aria-label", name);
     b.innerHTML = `<img src="assets/${id}.png" alt="" loading="lazy">`;
-    b.addEventListener("click", () => pick(i));
+    b.addEventListener("click", () => pick(i, true));
     box.appendChild(b);
   });
   pick(0);
@@ -161,17 +177,21 @@ function showResults() {
   count($("resTotal"), rings * 100 + BONUS);
 }
 new IntersectionObserver(([e]) => {
-  if (e.isIntersecting && !resShown) { resShown = true; showResults(); }
+  if (e.isIntersecting && !resShown) { resShown = true; showResults(); burst(); }
 }, { threshold: 0.6 }).observe($("results"));
 
 /* --------------------------------------------------------------------------
    Empezar / volver
    -------------------------------------------------------------------------- */
 $("openBtn").addEventListener("click", () => {
+  const dash = $("dash"); // Sonic cruza la pantalla en bolita antes de entrar al nivel
+  dash.classList.remove("on"); void dash.offsetWidth; dash.classList.add("on");
+  setTimeout(() => dash.classList.remove("on"), 1000);
   level.classList.add("show");
   if (window.playMusic) window.playMusic();
-  burst();
-  setTimeout(() => document.querySelector(".a1").scrollIntoView({ behavior: "smooth" }), 60);
+  if (window.sfx) window.sfx([523, 659, 784, 1047], 0.07);
+  setTimeout(burst, 350);
+  setTimeout(() => document.querySelector(".a1").scrollIntoView({ behavior: "smooth" }), 400);
 });
 $("replay").addEventListener("click", () => {
   $("cover").scrollIntoView({ behavior: "smooth" });
@@ -273,12 +293,33 @@ function burst() {
   }
   btn.addEventListener("click", () => (master ? stop() : play()));
   window.playMusic = () => { if (!master) play(); };
-  window.ding = () => { // sonido de anillo, solo si el sonido está activado
+  window.sfx = (notes, step = 0.07) => { // efectos (anillo, toques…), solo si el sonido está activado
     if (!master) return;
     const t = ctx.currentTime;
-    tone(1318.5, t, 0.09, "square", 0.06);
-    tone(1760, t + 0.07, 0.18, "square", 0.06);
+    notes.forEach((f, i) => tone(f, t + i * step, step * 2, "square", 0.06));
   };
+})();
+
+/* --------------------------------------------------------------------------
+   Tocar un personaje: da una vuelta y suena
+   -------------------------------------------------------------------------- */
+document.querySelectorAll(".tapme").forEach((box) => box.addEventListener("click", () => {
+  const img = box.querySelector("img");
+  img.classList.remove("spun"); void img.offsetWidth; img.classList.add("spun");
+  img.addEventListener("animationend", () => img.classList.remove("spun"), { once: true });
+  if (window.sfx) window.sfx([392, 523, 659], 0.05);
+}));
+
+/* Confeti que cae en la portada */
+(function coverConfetti() {
+  const box = $("confetti");
+  const colors = ["#ffd31a", "#ff9a00", "#e8212e", "#19e6ff", "#ffffff", "#3cb043"];
+  for (let i = 0; i < 26; i++) {
+    const b = document.createElement("b");
+    b.style.cssText = `left:${Math.random() * 100}%;background:${colors[i % colors.length]};` +
+      `animation-duration:${5 + Math.random() * 6}s;animation-delay:-${Math.random() * 10}s`;
+    box.appendChild(b);
+  }
 })();
 
 /* --------------------------------------------------------------------------
