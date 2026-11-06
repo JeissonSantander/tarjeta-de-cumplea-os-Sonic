@@ -53,7 +53,7 @@ document.getElementById("waLink").href =
 
   (function frame(t) {
     ctx.clearRect(0, 0, W, H);
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4; ctx.shadowColor = "#ffb300"; ctx.shadowBlur = 10;
     list.forEach((p, i) => {
       p.y += p.vy;
       if (p.y > H + 20) list[i] = make(-20);
