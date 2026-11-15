@@ -258,6 +258,7 @@ html, body {
 .screen-content {
   width: 100%;
   max-width: 1150px;
+  height: 100%;
   max-height: 100%;
   margin: auto;
   display: flex;
@@ -267,6 +268,16 @@ html, body {
   text-align: center;
   gap: 10px;
   z-index: 3;
+  box-sizing: border-box;
+}
+
+.hero-intro-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  z-index: 2;
 }
 
 /* ==========================================================================
@@ -1505,10 +1516,12 @@ html, body {
    ========================================================================== */
 @media (max-width: 767px) {
   .screen {
-    padding: 10px 8px;
+    padding: 14px 8px;
+    box-sizing: border-box;
   }
   .screen-content {
-    gap: 6px;
+    height: 100%;
+    gap: 8px;
     justify-content: space-evenly;
   }
 
@@ -1555,55 +1568,77 @@ html, body {
     margin: 2px 0;
   }
 
-  /* ---------- PANTALLA 1 ---------- */
-  .hero-stage-grid {
-    gap: 5px;
-    width: 100%;
-  }
-  .sonic-scoreboard-deluxe {
-    padding: 3px 14px;
-    font-size: 0.68rem;
+  /* ---------- PANTALLA 1 (RESPONSIVE MASTER & ESPACIO APROVECHADO) ---------- */
+  .hero-layout {
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px 4px;
+    box-sizing: border-box;
     gap: 8px;
   }
+  .hero-intro-header {
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .sonic-scoreboard-deluxe {
+    padding: 4px 16px;
+    font-size: 0.72rem;
+    gap: 10px;
+  }
   .sub-celebrate-deluxe {
-    font-size: 1rem;
-    margin: 2px 0;
+    font-size: 1.05rem;
+    margin: 2px 0 0 0;
+  }
+  .hero-stage-grid {
+    gap: 14px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   .portal-sonic-3d {
-    width: min(56vw, 190px);
-    height: min(27vh, 210px);
-    border-radius: 26px;
+    width: min(72vw, 245px);
+    height: min(35vh, 275px);
+    border-radius: 28px;
   }
   .sonic-cake-hero {
-    border-radius: 24px;
+    border-radius: 26px;
     border-width: 4px;
   }
   .chaos-emerald-badge {
-    width: 58px;
-    height: 58px;
+    width: 62px;
+    height: 62px;
     bottom: -8px;
     right: -8px;
     border-width: 3.5px;
   }
   .badge-num {
-    font-size: 1.9rem;
+    font-size: 2rem;
   }
   .badge-txt {
-    font-size: 0.58rem;
+    font-size: 0.6rem;
+  }
+  .name-emblem-block {
+    margin-top: 4px;
   }
   .hero-name-3d {
-    font-size: 2.15rem;
+    font-size: clamp(2.1rem, 7.5vw, 2.75rem);
     line-height: 1;
-    margin: 2px 0;
+    margin: 0 0 4px 0;
   }
   .surname-racing-stripe {
-    padding: 3px 12px;
-    font-size: 0.72rem;
+    padding: 4px 16px;
+    font-size: 0.76rem;
   }
   .btn-down-deluxe {
-    padding: 8px 18px;
-    font-size: 0.8rem;
-    margin-top: 3px;
+    padding: 10px 22px;
+    font-size: 0.82rem;
+    margin: 4px 0;
     border-width: 3px;
     border-bottom-width: 5px;
   }
