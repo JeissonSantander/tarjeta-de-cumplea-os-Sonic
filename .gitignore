@@ -1,4 +1,5 @@
 node_modules/
-screenshots/
-test-mobile.js
 package-lock.json
+screenshots/
+debug-boxes.js
+test-mobile.js
