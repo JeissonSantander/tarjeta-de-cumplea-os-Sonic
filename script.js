@@ -69,8 +69,19 @@ if (portal) {
 // Personaje seleccionado y mensaje dinámico para WhatsApp
 let selectedCharacter = "Sonic";
 function updateWaLink() {
-  const msg = `¡Hola Dalitza y Darío! Confirmo mi asistencia al cumpleaños #4 de Juan José Melo Santander 🦔🎂 ¡Voy con todo el poder de ${selectedCharacter}! ⚡`;
-  $("waLink").href = `https://wa.me/${EVENT.phone}?text=${q(msg)}`;
+  const msg = 
+`¡Hola Dalitza y Darío! 👋
+
+🎉 *¡CONFIRMO MI ASISTENCIA!* 🎉
+Al cumpleaños #4 de *Juan José Melo Santander* 🎂
+
+⭐ *Personaje elegido:* ${selectedCharacter} ⚡
+📅 *Fecha:* Domingo, 22 de Noviembre (3:00 PM)
+📍 *Lugar:* Salón Comunal Barrio Chambú 2ª Etapa
+
+¡Allí estaremos listos para celebrar a toda velocidad! 🚀🏁`;
+
+  $("waLink").href = `https://api.whatsapp.com/send?phone=${EVENT.phone}&text=${encodeURIComponent(msg)}`;
 }
 updateWaLink();
 
@@ -429,20 +440,32 @@ document.querySelectorAll(".tapme").forEach((box) => box.addEventListener("click
 (function initShare() {
   const tip = $("shareTip");
   $("shareBtn").addEventListener("click", async () => {
+    const shareText = 
+`🎉 *¡ESTÁS INVITADO AL CUMPLEAÑOS #4 DE JUAN JOSÉ!* 🦔🎂
+
+Acompáñanos a celebrar una tarde llena de juegos, diversión y sorpresas a toda velocidad con Sonic y sus amigos ⚡
+
+📅 *Fecha:* Domingo, 22 de Noviembre de 2026
+⏰ *Hora:* 3:00 PM
+📍 *Lugar:* Salón Comunal Barrio Chambú 2ª Etapa, Pasto
+
+👉 *Abre aquí tu invitación interactiva y confirma tu asistencia:*
+${location.href}`;
+
     const data = {
-      title: "¡Cumpleaños #4 de Juan José!",
-      text: "¡Estás invitado al cumpleaños #4 de Juan José Melo Santander! 🦔🎂⚡",
+      title: "Cumpleaños #4 de Juan José Melo Santander",
+      text: shareText,
       url: location.href,
     };
     if (navigator.share) {
       try { await navigator.share(data); return; } catch { /* cancelado */ }
     }
     try {
-      await navigator.clipboard.writeText(location.href);
+      await navigator.clipboard.writeText(shareText);
       tip.classList.add("visible");
       setTimeout(() => tip.classList.remove("visible"), 2600);
     } catch {
-      prompt("Copia este enlace para compartir:", location.href);
+      prompt("Copia este mensaje para compartir:", shareText);
     }
   });
 })();
