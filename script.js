@@ -1,217 +1,287 @@
 "use strict";
 
 /* ==========================================================================
-   DATOS DEL EVENTO — lo único que hay que editar.
-   ⚠ age y start son PROVISIONALES hasta confirmar con los papás.
+   DATOS DEL EVENTO · CUMPLEAÑOS #4 DE JUAN JOSÉ MELO SANTANDER
    ========================================================================== */
 const EVENT = {
-  age: 7,                               // PROVISIONAL: años que cumple
-  start: "2026-12-12T15:00:00-05:00",   // PROVISIONAL: fecha y hora (hora Colombia)
-  place: "Salón Comunal Barrio Chambú",
+  name: "Juan José Melo Santander",
+  shortName: "Juan José",
+  age: 4,
+  start: "2026-11-22T15:00:00-05:00", // Domingo 22 de Noviembre 2026, 3:00 PM (hora Colombia)
+  place: "Salón Comunal Barrio Chambú 2 Etapa",
   city: "Pasto, Nariño",
+  parents: "Darío Melo y Dalitza Santander",
   phone: "573233724654",
   durationHours: 4,
 };
 
 const $ = (id) => document.getElementById(id);
-const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const when = new Date(EVENT.start);
 const fmt = (o) => when.toLocaleString("es-CO", { timeZone: "America/Bogota", ...o });
-const FIELDS = {
-  age: EVENT.age, place: EVENT.place, city: EVENT.city,
-  weekday: fmt({ weekday: "long" }), day: fmt({ day: "numeric" }),
-  month: fmt({ month: "long" }), year: fmt({ year: "numeric" }),
-  time: fmt({ hour: "numeric", minute: "2-digit", hour12: true }),
-};
-document.querySelectorAll("[data-f]").forEach((el) => { el.textContent = FIELDS[el.dataset.f]; });
 
+// Rellenar campos dinámicos [data-f]
+const FIELDS = {
+  age: EVENT.age,
+  place: EVENT.place,
+  city: EVENT.city,
+  weekday: fmt({ weekday: "long" }).toUpperCase(),
+  day: fmt({ day: "numeric" }),
+  month: fmt({ month: "long" }).toUpperCase(),
+  year: fmt({ year: "numeric" }),
+  time: fmt({ hour: "numeric", minute: "2-digit", hour12: true }).toUpperCase(),
+};
+
+document.querySelectorAll("[data-f]").forEach((el) => {
+  if (FIELDS[el.dataset.f] !== undefined) {
+    el.textContent = FIELDS[el.dataset.f];
+  }
+});
+
+if ($("hostsNames")) {
+  $("hostsNames").textContent = EVENT.parents;
+}
+
+// Configuración de URLs dinámicas
 const stamp = (d) => d.toISOString().replace(/[-:]|\.\d{3}/g, "");
 const end = new Date(when.getTime() + EVENT.durationHours * 3600000);
 const q = encodeURIComponent;
-const place = `${EVENT.place}, ${EVENT.city}`;
-$("mapsLink").href = `https://www.google.com/maps/search/?api=1&query=${q(place)}`;
+const fullLocation = `${EVENT.place}, ${EVENT.city}`;
+
+// Enlace Google Maps
+$("mapsLink").href = `https://www.google.com/maps/search/?api=1&query=${q(fullLocation)}`;
+
+// Enlace Google Calendar
 $("calLink").href =
-  `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${q("Cumpleaños de Juan José Melo Santander")}` +
-  `&dates=${stamp(when)}/${stamp(end)}&location=${q(place)}&details=${q("Invitan Dalitza Santander y Darío Melo")}`;
-$("waLink").href =
-  `https://wa.me/${EVENT.phone}?text=${q("Hola Dalitza y Darío, confirmo mi asistencia al cumpleaños de Juan José 🦔💙")}`;
+  `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${q("Cumpleaños #4 de Juan José Melo Santander 🦔🎂")}` +
+  `&dates=${stamp(when)}/${stamp(end)}&location=${q(fullLocation)}&details=${q(`¡Estás invitado a celebrar los 4 añitos de Juan José a toda velocidad!\nLugar: ${fullLocation}\nInvitan con cariño sus padres: ${EVENT.parents}`)}`;
 
-/* --------------------------------------------------------------------------
-   Navegación entre pantallas: toque (derecha/izquierda), deslizar, flechas, barras
-   -------------------------------------------------------------------------- */
-const story = $("story");
-const slides = [...story.querySelectorAll(".slide")];
-const bars = [...$("bars").children];
-let cur = 0, started = false;
-bars[0].classList.add("full");
-
-function go(n) {
-  n = Math.max(0, Math.min(slides.length - 1, n));
-  if (n === cur) return;
-  if (!started) { started = true; if (window.playMusic) window.playMusic(); } // el primer toque inicia la música
-  cur = n;
-  story.dataset.i = n;
-  slides.forEach((s, i) => {
-    s.classList.toggle("on", i === n);
-    s.classList.toggle("before", i < n);
-    if (i !== n) s.scrollTop = 0;
+// Interacción divertida con el portal de Sonic en portada
+const portal = $("portalSonic");
+if (portal) {
+  portal.addEventListener("click", () => {
+    portal.classList.remove("spin-click");
+    void portal.offsetWidth;
+    portal.classList.add("spin-click");
+    if (window.sfx) window.sfx([987, 1318, 1760], 0.08);
   });
-  bars.forEach((b, i) => b.classList.toggle("full", i <= n));
-  if (window.sfx) window.sfx([659, 880], 0.06);
-  if (n === slides.length - 1) burst();
 }
 
-$("nextBtn").addEventListener("click", () => go(cur + 1));
-$("prevBtn").addEventListener("click", () => go(cur - 1));
-$("replay").addEventListener("click", () => go(0));
-bars.forEach((b, i) => b.addEventListener("click", () => go(i)));
-document.querySelectorAll("[data-next]").forEach((b) => b.addEventListener("click", () => go(cur + 1)));
-addEventListener("keydown", (e) => {
-  if (e.key === "ArrowRight") go(cur + 1);
-  if (e.key === "ArrowLeft") go(cur - 1);
-});
+// Personaje seleccionado y mensaje dinámico para WhatsApp
+let selectedCharacter = "Sonic";
+function updateWaLink() {
+  const msg = `¡Hola Dalitza y Darío! Confirmo mi asistencia al cumpleaños #4 de Juan José Melo Santander 🦔🎂 ¡Voy con todo el poder de ${selectedCharacter}! ⚡`;
+  $("waLink").href = `https://wa.me/${EVENT.phone}?text=${q(msg)}`;
+}
+updateWaLink();
 
-let x0 = null, y0 = 0;
-story.addEventListener("pointerdown", (e) => { x0 = e.clientX; y0 = e.clientY; });
-story.addEventListener("pointercancel", () => { x0 = null; });
-story.addEventListener("pointerup", (e) => {
-  if (x0 === null) return;
-  const dx = e.clientX - x0, dy = e.clientY - y0;
-  x0 = null;
-  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) return go(cur + (dx < 0 ? 1 : -1)); // deslizar
-  if (Math.abs(dx) > 10 || Math.abs(dy) > 10) return;                                        // era un scroll
-  if (e.target.closest("a, button, .tapme")) return;                                          // toque en un control
-  const r = story.getBoundingClientRect();
-  go(cur + (e.clientX - r.left < r.width * 0.3 ? -1 : 1));                                    // lado izquierdo = atrás
-});
-
-/* Anillos dorados que suben flotando en cada pantalla */
-slides.forEach((s) => {
-  const fx = document.createElement("div");
-  fx.className = "fx";
-  for (let i = 0; i < 7; i++) {
-    const b = document.createElement("b");
-    const size = 14 + Math.random() * 16;
-    b.style.cssText = `left:${Math.random() * 100}%;width:${size}px;height:${size}px;--dx:${(Math.random() - 0.5) * 80}px;` +
-      `animation-duration:${7 + Math.random() * 7}s,1.4s;animation-delay:-${Math.random() * 12}s,0s`;
-    fx.appendChild(b);
-  }
-  s.prepend(fx);
+/* --------------------------------------------------------------------------
+   Navegación con botones "Ver más abajo" (Smooth Scroll)
+   -------------------------------------------------------------------------- */
+document.querySelectorAll("[data-target]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const target = $(btn.dataset.target);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+      if (window.sfx) window.sfx([659, 880, 1046], 0.05);
+    }
+  });
 });
 
 /* --------------------------------------------------------------------------
-   Elige a tu personaje
+   Anillos dorados flotantes de fondo
+   -------------------------------------------------------------------------- */
+(function createBackgroundRings() {
+  const bg = $("dynamicFxLayer");
+  if (!bg) return;
+  for (let i = 0; i < 14; i++) {
+    const ring = document.createElement("b");
+    const size = 20 + Math.random() * 26;
+    ring.style.cssText = `left:${Math.random() * 100}%;width:${size}px;height:${size}px;--dx:${(Math.random() - 0.5) * 100}px;` +
+      `animation-duration:${7 + Math.random() * 8}s,1.6s;animation-delay:-${Math.random() * 14}s,0s`;
+    bg.appendChild(ring);
+  }
+})();
+
+/* --------------------------------------------------------------------------
+   Selector Interactivo de Personajes (Con Auras Elementales Dinámicas)
    -------------------------------------------------------------------------- */
 const STATS = ["VELOCIDAD", "DIVERSIÓN", "HAMBRE DE PASTEL"];
-const CHARS = [ // [archivo, nombre, frase, stats, movimiento (clase m-… en el CSS)]
-  ["sonic", "Sonic", "El más veloz: ¡no llegues tarde!", [100, 95, 70], "jump"],
-  ["tails", "Tails", "Tu guía para llegar a la fiesta.", [75, 90, 60], "fly"],
-  ["knuckles", "Knuckles", "Guardián del pastel.", [60, 85, 100], "punch"],
-  ["amy", "Amy", "Reina de la diversión.", [70, 100, 80], "sway"],
-  ["shadow", "Shadow", "Maestro de los juegos.", [95, 80, 75], "glide"],
-  ["silver", "Silver", "Viene del futuro, ¡y llega a tiempo!", [65, 88, 85], "float"],
-  ["eggman", "Dr. Eggman", "Prohibido robar los dulces.", [30, 60, 100], "hover"],
+const CHARS = [
+  ["sonic", "Sonic", "¡El más veloz de la fiesta!", [100, 95, 75], "jump", "#00b0ff", "⚡"],
+  ["tails", "Tails", "Experto en juegos y diversión.", [75, 90, 65], "fly", "#ffb300", "✈️"],
+  ["knuckles", "Knuckles", "Guardián oficial del pastel.", [60, 85, 100], "punch", "#e53935", "🥊"],
+  ["shadow", "Shadow", "Poder absoluto en la pista.", [95, 80, 75], "glide", "#d50000", "🔥"],
+  ["amy", "Amy", "Reina de la diversión y alegría.", [70, 100, 80], "sway", "#ff4081", "💖"],
+  ["silver", "Silver", "Viene del futuro con súper poderes.", [65, 88, 85], "float", "#00e5ff", "🔮"],
+  ["eggman", "Dr. Eggman", "¡Bailará y festejará toda la tarde!", [35, 70, 95], "hover", "#ff6d00", "🤖"],
 ];
-(function roster() {
+
+(function initRoster() {
   const box = $("roster"), img = $("pickImg"), wrap = $("pickWrap");
+  const halo = $("charHalo"), emojiEl = $("charEmoji");
+
   function pick(i, fromTap) {
-    const [id, name, role, v, move] = CHARS[i];
+    const [id, name, role, v, move, haloCol, emoji] = CHARS[i];
     img.src = `assets/${id}.png`;
     img.alt = name;
-    img.className = `m-${move}`;
+    img.className = `char-hero-image m-${move}`;
     wrap.classList.remove("swap"); void wrap.offsetWidth; wrap.classList.add("swap");
-    if (fromTap && window.sfx) window.sfx([660, 880]);
+    
+    // Cambiar aura elemental del podio
+    if (halo) {
+      halo.style.boxShadow = `0 0 45px ${haloCol}`;
+      halo.style.background = `radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 35%, ${haloCol}40 55%, transparent 72%)`;
+    }
+    if (emojiEl) emojiEl.textContent = emoji;
+
+    if (fromTap && window.sfx) window.sfx([523, 659, 784, 1046], 0.04);
+    
     $("pickName").textContent = name;
     $("pickRole").textContent = role;
     $("pickStats").innerHTML = STATS.map((s, k) => `<p><span>${s}</span><i style="--v:${v[k]}%"></i></p>`).join("");
     [...box.children].forEach((b, k) => b.setAttribute("aria-selected", k === i));
+
+    selectedCharacter = name;
+    updateWaLink();
   }
+
   CHARS.forEach(([id, name], i) => {
     const b = document.createElement("button");
-    b.className = "mb";
+    b.className = "champ-btn";
     b.setAttribute("role", "tab");
     b.setAttribute("aria-label", name);
     b.innerHTML = `<img src="assets/${id}.png" alt="" loading="lazy">`;
     b.addEventListener("click", () => pick(i, true));
     box.appendChild(b);
   });
-  pick(0);
+
+  pick(0, false);
 })();
 
-/* Tocar un personaje: da una vuelta y suena */
+/* Tocar personaje: giro 360 y sonido */
 document.querySelectorAll(".tapme").forEach((box) => box.addEventListener("click", () => {
   const img = box.querySelector("img");
+  if (!img) return;
   img.classList.remove("spun"); void img.offsetWidth; img.classList.add("spun");
   img.addEventListener("animationend", () => img.classList.remove("spun"), { once: true });
-  if (window.sfx) window.sfx([392, 523, 659], 0.05);
+  if (window.sfx) window.sfx([392, 523, 659, 880], 0.05);
 }));
 
-/* Estallido de anillos y confeti (al llegar a la última pantalla) */
-function burst() {
-  if (reduced) return;
-  const c = document.createElement("canvas");
-  c.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:99";
-  c.width = innerWidth; c.height = innerHeight;
-  document.body.appendChild(c);
-  const ctx = c.getContext("2d");
-  const colors = ["#ffd400", "#1a56db", "#e8222d", "#3cb043", "#ffffff"];
-  const bits = Array.from({ length: 110 }, (_, i) => {
-    const a = Math.random() * 6.283, s = 3 + Math.random() * 7;
-    return { x: c.width / 2, y: c.height * 0.4, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 5, ring: i % 3 === 0,
-             col: colors[i % colors.length], a: 1, r: 0 };
-  });
-  let f = 0;
-  (function draw() {
-    ctx.clearRect(0, 0, c.width, c.height);
-    let alive = false;
-    bits.forEach((b) => {
-      b.vy += 0.2; b.x += b.vx; b.y += b.vy; b.r += 0.2;
-      if (f > 50) b.a = Math.max(0, b.a - 0.02);
-      if (b.a > 0) alive = true;
-      ctx.globalAlpha = b.a;
-      if (b.ring) {
-        ctx.strokeStyle = "#ffd400"; ctx.lineWidth = 4; ctx.shadowColor = "#ffb300"; ctx.shadowBlur = 8;
-        ctx.beginPath(); ctx.ellipse(b.x, b.y, Math.max(1.5, 9 * Math.abs(Math.cos(b.r))), 9, 0, 0, 6.283); ctx.stroke();
-      } else {
-        ctx.shadowBlur = 0; ctx.fillStyle = b.col; ctx.fillRect(b.x, b.y, 9, 6);
-      }
-    });
-    f++;
-    if (alive) requestAnimationFrame(draw); else c.remove();
-  })();
-}
-
 /* --------------------------------------------------------------------------
-   Cuenta regresiva
+   Cuenta regresiva turbo
    -------------------------------------------------------------------------- */
-(function countdown() {
+(function initCountdown() {
   const els = ["days", "hours", "minutes", "seconds"].map($);
   const pad = (n) => String(n).padStart(2, "0");
+  const title = $("cdTitle");
+
   function tick() {
-    const d = Math.max(0, when - Date.now());
-    [Math.floor(d / 864e5), Math.floor(d / 36e5) % 24, Math.floor(d / 6e4) % 60, Math.floor(d / 1e3) % 60]
-      .forEach((v, i) => { els[i].textContent = pad(v); });
+    const diff = when.getTime() - Date.now();
+    if (diff <= 0) {
+      if (title) title.textContent = "🎉 ¡HOY ES EL GRAN DÍA! ¡A CELEBRAR! 🎂";
+      els.forEach((el) => { if (el) el.textContent = "00"; });
+      return;
+    }
+    if (title) title.textContent = "⚡ CUENTA REGRESIVA PARA LA CARRERA ⚡";
+    const d = Math.floor(diff / 864e5);
+    const h = Math.floor(diff / 36e5) % 24;
+    const m = Math.floor(diff / 6e4) % 60;
+    const s = Math.floor(diff / 1e3) % 60;
+    [d, h, m, s].forEach((v, i) => { if (els[i]) els[i].textContent = pad(v); });
   }
   tick();
   setInterval(tick, 1000);
 })();
 
 /* --------------------------------------------------------------------------
-   Música chiptune original + efectos (Web Audio, sin archivos)
+   Música oficial: Green Hill Zone Theme (YouTube ID: G-i8HYi1QH0)
+   Con respaldo automático de síntesis retro (Web Audio API)
    -------------------------------------------------------------------------- */
-(function music() {
+(function initMusic() {
   const btn = $("audioToggle");
   const label = $("audioText");
-  const Hz = (n) => 440 * 2 ** ((n - 69) / 12); // n = nota MIDI
+
+  let isPlaying = false;
+  let ytPlayer = null;
+  let ytReady = false;
+  let useFallbackSynth = false;
+
+  // 1. Cargar YouTube IFrame API para reproducir la canción solicitada
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  const firstScriptTag = document.getElementsByTagName("script")[0];
+  if (firstScriptTag && firstScriptTag.parentNode) {
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  } else {
+    document.head.appendChild(tag);
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    try {
+      ytPlayer = new YT.Player("ytPlayer", {
+        height: "1",
+        width: "1",
+        videoId: "G-i8HYi1QH0", // Canción Green Hill Zone solicitada
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          loop: 1,
+          playlist: "G-i8HYi1QH0",
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0
+        },
+        events: {
+          onReady: function () {
+            ytReady = true;
+            if (isPlaying) {
+              try {
+                ytPlayer.playVideo();
+                ytPlayer.setVolume(85);
+              } catch (_) {}
+            }
+          },
+          onStateChange: function (event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+              isPlaying = true;
+              btn.classList.add("playing");
+              label.textContent = "Pausar";
+            } else if (event.data === YT.PlayerState.PAUSED) {
+              isPlaying = false;
+              btn.classList.remove("playing");
+              label.textContent = "Música";
+            }
+          },
+          onError: function () {
+            console.warn("YouTube player blocked or offline, activating retro synth fallback");
+            useFallbackSynth = true;
+            if (isPlaying) playSynth();
+          }
+        }
+      });
+    } catch (e) {
+      console.warn("YT Player init error:", e);
+      useFallbackSynth = true;
+    }
+  };
+
+  // 2. Respaldo Chiptune en Web Audio API (si YouTube tarda o está offline)
+  const Hz = (n) => 440 * 2 ** ((n - 69) / 12);
   const R = null;
   const BEAT = 0.17;
-  // [nota MIDI, duración en corcheas] — melodía alegre en Do mayor
-  const LEAD = [[76,1],[76,1],[79,1],[76,1],[74,1],[72,1],[74,2],  [72,1],[72,1],[76,1],[72,1],[69,1],[67,1],[69,2],
-                [67,1],[69,1],[71,1],[74,1],[72,2],[R,1],[67,1],  [72,1],[74,1],[76,1],[79,1],[76,3],[R,1]];
-  const BASS = [48,48,55,52, 53,53,60,57, 55,55,59,62, 48,52,55,60]; // una nota cada 2 corcheas
+  const LEAD = [
+    [76,1],[76,1],[79,1],[76,1],[74,1],[72,1],[74,2],
+    [72,1],[72,1],[76,1],[72,1],[69,1],[67,1],[69,2],
+    [67,1],[69,1],[71,1],[74,1],[72,2],[R,1],[67,1],
+    [72,1],[74,1],[76,1],[79,1],[76,3],[R,1]
+  ];
+  const BASS = [48,48,55,52, 53,53,60,57, 55,55,59,62, 48,52,55,60];
   let ctx = null, master = null, timer = null;
 
   function tone(freq, t, dur, type, vol) {
+    if (!ctx) return;
     const o = ctx.createOscillator(), g = ctx.createGain();
     o.type = type; o.frequency.value = freq;
     g.gain.setValueAtTime(vol, t);
@@ -219,48 +289,160 @@ function burst() {
     o.connect(g); g.connect(master);
     o.start(t); o.stop(t + dur + 0.02);
   }
+
   function schedule(start) {
     let t = start;
     LEAD.forEach(([n, d]) => { if (n) tone(Hz(n), t, d * BEAT * 0.9, "square", 0.05); t += d * BEAT; });
     BASS.forEach((n, i) => tone(Hz(n), start + i * 2 * BEAT, BEAT * 1.8, "triangle", 0.12));
     return t - start;
   }
-  function play() {
+
+  function playSynth() {
     if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
     ctx.resume();
     master = ctx.createGain();
     master.connect(ctx.destination);
     const len = schedule(ctx.currentTime + 0.05);
     timer = setInterval(() => schedule(ctx.currentTime + 0.05), len * 1000);
-    btn.classList.add("playing"); label.textContent = "Pausar";
+    btn.classList.add("playing");
+    label.textContent = "Pausar";
   }
-  function stop() {
+
+  function stopSynth() {
     clearInterval(timer);
-    if (master) master.disconnect(); // corta también las notas ya programadas
+    if (master) master.disconnect();
     master = null;
-    btn.classList.remove("playing"); label.textContent = "Música";
+    btn.classList.remove("playing");
+    label.textContent = "Música";
   }
-  btn.addEventListener("click", () => (master ? stop() : play()));
-  window.playMusic = () => { if (!master) play(); };
-  window.sfx = (notes, step = 0.07) => { // efectos de sonido, solo si el sonido está activado
-    if (!master) return;
-    const t = ctx.currentTime;
-    notes.forEach((f, i) => tone(f, t + i * step, step * 2, "square", 0.06));
+
+  // 3. Control maestro de reproducción
+  function playAudio() {
+    isPlaying = true;
+    if (ytReady && ytPlayer && typeof ytPlayer.playVideo === "function" && !useFallbackSynth) {
+      try {
+        ytPlayer.playVideo();
+        ytPlayer.setVolume(85);
+        btn.classList.add("playing");
+        label.textContent = "Pausar";
+        return;
+      } catch (e) {
+        console.warn("Falling back to synth:", e);
+      }
+    }
+    playSynth();
+  }
+
+  function pauseAudio() {
+    isPlaying = false;
+    if (ytReady && ytPlayer && typeof ytPlayer.pauseVideo === "function") {
+      try {
+        ytPlayer.pauseVideo();
+      } catch (_) {}
+    }
+    stopSynth();
+    btn.classList.remove("playing");
+    label.textContent = "Música";
+  }
+
+  btn.addEventListener("click", () => {
+    if (isPlaying) {
+      pauseAudio();
+    } else {
+      playAudio();
+    }
+  });
+
+  // Inicio en primera interacción de usuario (pantalla táctil o clic)
+  document.addEventListener("click", function firstPlay() {
+    if (!isPlaying) {
+      playAudio();
+    }
+    document.removeEventListener("click", firstPlay);
+  }, { once: true });
+
+  window.playMusic = () => { if (!isPlaying) playAudio(); };
+
+  // Efectos de sonido (anillos dorados y botones)
+  window.sfx = (notes, step = 0.07) => {
+    try {
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      ctx.resume();
+      const sfxMaster = ctx.createGain();
+      sfxMaster.gain.value = 0.2;
+      sfxMaster.connect(ctx.destination);
+      const t = ctx.currentTime;
+      notes.forEach((f, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = "sine";
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0.2, t + i * step);
+        g.gain.exponentialRampToValueAtTime(0.001, t + (i + 1) * step);
+        o.connect(g);
+        g.connect(sfxMaster);
+        o.start(t + i * step);
+        o.stop(t + (i + 1) * step);
+      });
+    } catch (_) {}
   };
 })();
 
 /* --------------------------------------------------------------------------
-   Compartir
+   Efecto de chispas interactivas al mover el cursor o dedo (Speed Sparks)
    -------------------------------------------------------------------------- */
-(function share() {
+(function initSparks() {
+  let lastSpark = 0;
+  const sparkColors = ["#ffd200", "#00e5ff", "#ffffff", "#ff4081"];
+
+  function createSpark(x, y) {
+    const now = Date.now();
+    if (now - lastSpark < 60) return;
+    lastSpark = now;
+
+    const spark = document.createElement("span");
+    spark.textContent = "✨";
+    spark.style.cssText = `
+      position: fixed;
+      left: ${x}px;
+      top: ${y}px;
+      font-size: ${14 + Math.random() * 12}px;
+      pointer-events: none;
+      z-index: 10000;
+      color: ${sparkColors[Math.floor(Math.random() * sparkColors.length)]};
+      transform: translate(-50%, -50%) scale(1);
+      transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+    `;
+    document.body.appendChild(spark);
+    requestAnimationFrame(() => {
+      spark.style.transform = `translate(-50%, ${-40 - Math.random() * 30}px) scale(0)`;
+      spark.style.opacity = "0";
+    });
+    setTimeout(() => spark.remove(), 600);
+  }
+
+  addEventListener("pointermove", (e) => createSpark(e.clientX, e.clientY), { passive: true });
+})();
+
+/* --------------------------------------------------------------------------
+   Compartir invitación
+   -------------------------------------------------------------------------- */
+(function initShare() {
   const tip = $("shareTip");
   $("shareBtn").addEventListener("click", async () => {
-    const data = { title: "Cumpleaños de Juan José", text: "¡Estás invitado al cumpleaños de Juan José! 🦔💙", url: location.href };
-    if (navigator.share) { try { await navigator.share(data); return; } catch { /* cancelado */ } }
+    const data = {
+      title: "¡Cumpleaños #4 de Juan José!",
+      text: "¡Estás invitado al cumpleaños #4 de Juan José Melo Santander! 🦔🎂⚡",
+      url: location.href,
+    };
+    if (navigator.share) {
+      try { await navigator.share(data); return; } catch { /* cancelado */ }
+    }
     try {
       await navigator.clipboard.writeText(location.href);
       tip.classList.add("visible");
-      setTimeout(() => tip.classList.remove("visible"), 2500);
-    } catch { prompt("Copia este enlace:", location.href); }
+      setTimeout(() => tip.classList.remove("visible"), 2600);
+    } catch {
+      prompt("Copia este enlace para compartir:", location.href);
+    }
   });
 })();

@@ -3,117 +3,349 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a2a9a">
-  <title>Cumpleaños de Juan José · ¡A toda velocidad!</title>
-  <meta name="description" content="Estás invitado al cumpleaños de Juan José Melo Santander. ¡Desliza y confirma tu asistencia!">
+  <meta name="theme-color" content="#0d47a1">
+  <title>¡Cumpleaños #4 de Juan José! · Sonic Adventure</title>
+  <meta name="description" content="Estás invitado al cumpleaños #4 de Juan José Melo Santander. ¡Acompáñanos a celebrar el domingo 22 de noviembre a las 3:00 PM en Green Hill!">
+
+  <!-- Previsualización en WhatsApp y redes sociales -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="¡Cumpleaños #4 de Juan José Melo Santander! 🦔🎂⚡">
+  <meta property="og:description" content="¡Estás invitado a celebrar a toda velocidad! Domingo 22 de noviembre · 3:00 PM · Salón Comunal Barrio Chambú 2ª Etapa. ¡Toca para abrir tu boleto VIP!">
+  <meta property="og:image" content="assets/juanjose-greenhill.jpg">
+  <meta property="og:image:alt" content="Juan José Melo Santander - ¡Cumpleaños #4!">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23ffd400' stroke-width='16'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Luckiest+Guy&family=Righteous&family=Titan+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="story" id="story" data-i="0">
 
-    <div class="bars" id="bars">
-      <button aria-label="Pantalla 1"><i></i></button>
-      <button aria-label="Pantalla 2"><i></i></button>
-      <button aria-label="Pantalla 3"><i></i></button>
-      <button aria-label="Pantalla 4"><i></i></button>
+  <!-- Paisaje temático animado de Green Hill (Nubes, Colinas a cuadros, Anillos de poder) -->
+  <div class="green-hill-bg" id="greenHillBg">
+    <div class="sky-clouds">
+      <div class="cloud c-1"></div>
+      <div class="cloud c-2"></div>
+      <div class="cloud c-3"></div>
     </div>
-    <button class="audio-toggle" id="audioToggle" aria-label="Activar música" title="Música">🎵 <span id="audioText">Música</span></button>
+    <div class="hills-silhouette"></div>
+  </div>
 
-    <!-- ============ 1 · PÓSTER DE PORTADA ============ -->
-    <section class="slide s1 on">
-      <svg class="arc a" style="--i:0" viewBox="0 0 400 110" aria-label="¡Ven a pasarla súper veloz!">
-        <defs><path id="arcPath" d="M16 104 Q200 -14 384 104"/></defs>
-        <text><textPath href="#arcPath" startOffset="50%" text-anchor="middle">¡VEN A PASARLA SÚPER VELOZ!</textPath></text>
-      </svg>
+  <!-- Capa de partículas dinámicas interactivas (anillos dorados y chispas de velocidad) -->
+  <div class="dynamic-fx-layer" id="dynamicFxLayer"></div>
 
-      <div class="hero a" style="--i:1">
-        <svg class="bolt-line" viewBox="0 0 600 90" preserveAspectRatio="none" aria-hidden="true">
-          <polyline points="0,46 60,30 90,56 150,22 200,60 260,34 300,50"/>
-          <polyline points="600,44 540,60 505,30 450,64 400,28 340,56 300,50"/>
-          <polyline points="150,22 170,6 160,20 190,0" class="br"/>
-          <polyline points="450,64 470,84 456,70 486,90" class="br"/>
-        </svg>
-        <div class="ring3d"></div>
-        <img class="hero-char" src="assets/sonic.png" alt="Sonic saliendo de un anillo dorado">
+  <!-- Botón de música flotante estilo ecualizador arcade en vivo -->
+  <button class="audio-btn" id="audioToggle" aria-label="Activar o pausar música" title="Música">
+    <div class="sound-wave">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <span id="audioText">Música</span>
+  </button>
+
+  <!-- Contenedor general de pantallas completas con scroll snap vertical -->
+  <div class="snap-container" id="snapContainer">
+
+    <!-- ==================== PANTALLA 1: PORTADA VIP GREEN HILL ==================== -->
+    <section class="screen screen-1" id="pantalla-1">
+      
+      <!-- Elementos flotantes dinámicos -->
+      <div class="floating-party-fx">
+        <span class="balloon-float b-blue">🎈</span>
+        <span class="balloon-float b-red">🎈</span>
+        <span class="balloon-float b-gold">🎈</span>
+        <span class="sparkle-star star-1">✨</span>
+        <span class="sparkle-star star-2">⭐</span>
+        <span class="sparkle-star star-3">⚡</span>
       </div>
 
-      <h1 class="name a" style="--i:2">JUAN<br>JOSÉ</h1>
-      <div class="age-orb a" style="--i:3"><b data-f="age">?</b><span>AÑOS</span></div>
-      <button class="go a" style="--i:4" data-next>▶ ABRIR INVITACIÓN</button>
-    </section>
+      <div class="screen-content hero-layout">
+        
+        <div class="hero-stage-grid">
+          
+          <!-- Columna Izquierda: Portal Sonic 3D con Pastel HD y Medallón 4 Añitos -->
+          <div class="hero-portal-col">
+            <div class="portal-sonic-3d tapme" id="portalSonic" title="¡Juan José te invita a su fiesta de 4 añitos!">
+              <div class="golden-loop-ring"></div>
+              <div class="portal-energy-pulse"></div>
+              <img class="sonic-cake-hero m-float" src="assets/juanjose-greenhill.jpg" alt="Foto del cumpleañero Juan José Melo Santander en Green Hill Zone">
+              
+              <div class="chaos-emerald-badge">
+                <span class="badge-num" data-f="age">4</span>
+                <span class="badge-txt">AÑITOS</span>
+              </div>
+            </div>
+          </div>
 
-    <!-- ============ 2 · CUÁNDO Y DÓNDE ============ -->
-    <section class="slide s2">
-      <img class="deco tails m-fly" src="assets/tails.png" alt="" aria-hidden="true">
-      <p class="chip a" style="--i:0">¿CUÁNDO Y DÓNDE?</p>
+          <!-- Columna Derecha: Tarjeta de Mando e Información del Homenajeado -->
+          <div class="hero-info-col">
+            
+            <!-- Marcador Arcade oficial de Sonic -->
+            <div class="sonic-scoreboard-deluxe">
+              <div class="sb-col"><span class="sb-tag">AÑO</span><b class="sb-val">2026</b></div>
+              <div class="sb-divider"></div>
+              <div class="sb-col"><span class="sb-tag">RINGS</span><b class="sb-val">04</b></div>
+              <div class="sb-divider"></div>
+              <div class="sb-col"><span class="sb-tag">STAGE</span><b class="sb-val">CHAMBÚ</b></div>
+            </div>
 
-      <div class="when a" style="--i:1">
-        <div class="when-d">
-          <b data-f="day">--</b>
-          <span class="up" data-f="month">mes</span>
-          <small data-f="year">----</small>
+            <div class="hero-header-deluxe">
+              <div class="ticket-header-pill">★ INVITACIÓN OFICIAL DE CUMPLEAÑOS ★</div>
+              <p class="sub-celebrate-deluxe">¡ACOMPÁÑAME A CELEBRAR MIS!</p>
+            </div>
+
+            <div class="name-emblem-block">
+              <h1 class="hero-name-3d">JUAN JOSÉ</h1>
+              <div class="surname-racing-stripe">
+                <span class="stripe-checker">🏁</span>
+                <span class="stripe-text">MELO SANTANDER</span>
+                <span class="stripe-checker">🏁</span>
+              </div>
+            </div>
+
+            <!-- Resumen VIP del Evento en Portada -->
+            <div class="hero-quick-pass">
+              <div class="quick-pass-item">
+                <span class="qp-icon">📅</span>
+                <div class="qp-text">
+                  <span class="qp-label">FECHA</span>
+                  <span class="qp-val">Dom, 22 Nov 2026</span>
+                </div>
+              </div>
+              <div class="quick-pass-divider"></div>
+              <div class="quick-pass-item">
+                <span class="qp-icon">⏰</span>
+                <div class="qp-text">
+                  <span class="qp-label">HORA</span>
+                  <span class="qp-val">3:00 PM</span>
+                </div>
+              </div>
+              <div class="quick-pass-divider"></div>
+              <div class="quick-pass-item">
+                <span class="qp-icon">📍</span>
+                <div class="qp-text">
+                  <span class="qp-label">LUGAR</span>
+                  <span class="qp-val">Barrio Chambú 2ª Etapa</span>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-down-deluxe" data-target="pantalla-2">
+              <span class="btn-glow-txt">▼ VER MÁS ABAJO: FECHA Y LUGAR ▼</span>
+            </button>
+
+          </div>
+
         </div>
-        <i class="chain" aria-hidden="true"></i>
-        <div class="when-t">
-          <b data-f="time">--:--</b>
-          <span class="up" data-f="weekday">día</span>
+
+      </div>
+    </section>
+
+    <!-- ==================== PANTALLA 2: FECHA, HORA Y LUGAR (TABLERO ARCADE) ==================== -->
+    <section class="screen screen-2" id="pantalla-2">
+      
+      <!-- Tails volando con sus dos colas giratorias -->
+      <img class="flying-tails-deluxe" src="assets/tails.png" alt="" aria-hidden="true">
+
+      <div class="screen-content">
+        
+        <div class="section-title-wrap">
+          <div class="ticket-header-pill">🏁 ZONA DE LA FIESTA · PASE VIP 🏁</div>
+          <h2 class="section-heading-deluxe">¿CUÁNDO Y DÓNDE?</h2>
         </div>
-      </div>
 
-      <div class="sign a" style="--i:2">
-        <small>PUNTO DE PARTIDA ➜</small>
-        <h3 data-f="place">Lugar</h3>
-        <p data-f="city">Ciudad</p>
-      </div>
+        <div class="mission-dashboard">
+          
+          <!-- Tarjeta de Fecha estilo Boleto Holográfico -->
+          <div class="mission-card date-hologram-card">
+            <div class="card-neon-header">
+              <span class="neon-icon">📅</span>
+              <span class="neon-title">FECHA DE LA MISIÓN</span>
+              <span class="neon-chip">CONFIRMADA</span>
+            </div>
 
-      <div class="btn-row a" style="--i:3">
-        <a class="btn btn-blue" id="mapsLink" target="_blank" rel="noopener">🗺️ Cómo llegar</a>
-        <a class="btn btn-blue" id="calLink" target="_blank" rel="noopener">📅 Agendar</a>
-      </div>
+            <div class="date-display-matrix">
+              <div class="matrix-day-col">
+                <span class="matrix-sub">DÍA</span>
+                <b class="matrix-weekday" data-f="weekday">DOMINGO</b>
+                <b class="matrix-giant-number" data-f="day">22</b>
+                <span class="matrix-month" data-f="month">NOVIEMBRE</span>
+              </div>
+              <div class="matrix-separator"></div>
+              <div class="matrix-time-col">
+                <span class="matrix-sub">HORA EXACTA</span>
+                <div class="matrix-hour-pod">
+                  <span class="pulse-clock">⏰</span>
+                  <b class="matrix-hour-text" data-f="time">3:00 PM</b>
+                </div>
+                <div class="speed-warning">⚡ ¡LLEGA A TIEMPO PARA LA CARRERA!</div>
+              </div>
+            </div>
 
-      <div class="cd a" style="--i:4">
-        <p>FALTAN</p>
-        <div>
-          <span><b id="days">00</b>días</span>
-          <span><b id="hours">00</b>horas</span>
-          <span><b id="minutes">00</b>min</span>
-          <span><b id="seconds">00</b>seg</span>
+            <!-- Tablero de Cuenta Regresiva de Alta Energía -->
+            <div class="turbo-countdown">
+              <p class="turbo-cd-title" id="cdTitle">⚡ TIEMPO RESTANTE PARA LA FIESTA ⚡</p>
+              <div class="turbo-cd-grid">
+                <div class="turbo-box"><b id="days">00</b><span>Días</span></div>
+                <div class="turbo-box"><b id="hours">00</b><span>Horas</span></div>
+                <div class="turbo-box"><b id="minutes">00</b><span>Min</span></div>
+                <div class="turbo-box"><b id="seconds">00</b><span>Seg</span></div>
+              </div>
+            </div>
+
+            <a class="btn-arcade-action btn-calendar-arcade" id="calLink" target="_blank" rel="noopener">
+              📅 Guardar en Google Calendar
+            </a>
+          </div>
+
+          <!-- Tarjeta de Lugar estilo Poste de Meta de Carreras -->
+          <div class="mission-card place-hologram-card">
+            <div class="card-neon-header">
+              <span class="neon-icon">📍</span>
+              <span class="neon-title">UBICACIÓN DEL EVENTO</span>
+              <span class="neon-chip chip-yellow">META FINAL</span>
+            </div>
+
+            <div class="place-landmark">
+              <div class="landmark-radar">🏢</div>
+              <h3 class="landmark-name" data-f="place">Salón Comunal Barrio Chambú 2 Etapa</h3>
+              <p class="landmark-city" data-f="city">Pasto, Nariño</p>
+            </div>
+
+            <div class="party-features-strip">
+              <span class="pf-item">🎂 Pastel</span>
+              <span class="pf-item">🎈 Piñata</span>
+              <span class="pf-item">🎮 Juegos</span>
+              <span class="pf-item">🎁 Sorpresas</span>
+            </div>
+
+            <a class="btn-arcade-action btn-maps-arcade" id="mapsLink" target="_blank" rel="noopener">
+              🗺️ Ver en Google Maps (Cómo llegar)
+            </a>
+          </div>
+
         </div>
+
+        <button class="btn-down-deluxe" data-target="pantalla-3">
+          <span class="btn-glow-txt">▼ VER MÁS ABAJO: ELIGE TU PERSONAJE ▼</span>
+        </button>
+
       </div>
     </section>
 
-    <!-- ============ 3 · EL EQUIPO ============ -->
-    <section class="slide s3">
-      <p class="chip a" style="--i:0">ELIGE A TU PERSONAJE</p>
-      <div class="stage a" style="--i:1">
-        <div id="pickWrap" class="tapme"><img id="pickImg" alt=""></div>
-        <h3 id="pickName"></h3>
-        <p id="pickRole"></p>
-        <div class="stats" id="pickStats"></div>
+    <!-- ==================== PANTALLA 3: ELIGE TU PERSONAJE (PODIO DE ENERGÍA) ==================== -->
+    <section class="screen screen-3" id="pantalla-3">
+      
+      <!-- Rayos dinámicos en movimiento en el fondo -->
+      <div class="sonic-speed-lines"></div>
+
+      <div class="screen-content">
+        
+        <div class="section-title-wrap">
+          <div class="ticket-header-pill pill-cyan">⚡ EQUIPO DE AVENTURA ⚡</div>
+          <h2 class="section-heading-deluxe text-shadow-deep">ELIGE A TU PERSONAJE</h2>
+          <p class="section-sub-deluxe">¡Toca a tu corredor favorito para representarte y hacerlo girar!</p>
+        </div>
+
+        <div class="character-arena">
+          
+          <!-- Podio Holográfico con Aura Elemental del Personaje -->
+          <div class="elemental-podium tapme" id="pickWrap" title="¡Tócame para dar una vuelta!">
+            <div class="elemental-halo" id="charHalo"></div>
+            <div class="podium-pedestal"></div>
+            <img class="char-hero-image" id="pickImg" alt="Personaje seleccionado">
+          </div>
+
+          <div class="char-hud-display">
+            <div class="char-badge-header">
+              <span class="char-type-icon" id="charEmoji">⚡</span>
+              <h3 class="char-hud-name" id="pickName">Sonic</h3>
+            </div>
+            <p class="char-hud-role" id="pickRole">¡El más veloz de la fiesta!</p>
+            <div class="hud-stats-container" id="pickStats"></div>
+          </div>
+
+        </div>
+
+        <!-- Roster de selección de corredores con avatares ultra nítidos -->
+        <div class="champions-roster" id="roster" role="tablist" aria-label="Seleccionar personaje"></div>
+
+        <button class="btn-down-deluxe btn-down-royal" data-target="pantalla-4">
+          <span class="btn-glow-txt">▼ VER MÁS ABAJO: CONFIRMAR ASISTENCIA ▼</span>
+        </button>
+
       </div>
-      <div class="roster a" style="--i:2" id="roster" role="tablist" aria-label="Personajes"></div>
     </section>
 
-    <!-- ============ 4 · CONFIRMAR ============ -->
-    <section class="slide s4">
-      <p class="chip a" style="--i:0">¡TE ESPERAMOS!</p>
-      <h2 class="big a" style="--i:1">¿Vienes a<br>la carrera?</h2>
-      <div class="group tapme a" style="--i:2"><img class="m-hover" src="assets/grupo.png" alt="Sonic, Tails, Knuckles y Shadow"></div>
-      <div class="hosts a" style="--i:3"><small>INVITAN</small><p>Dalitza Estefanía Santander Martínez<br>y Darío Melo</p></div>
-      <a class="btn btn-wa a" style="--i:4" id="waLink" target="_blank" rel="noopener">💬 ¡CONFIRMO MI ASISTENCIA!</a>
-      <div class="btn-row a" style="--i:5">
-        <button class="btn btn-ghost" id="shareBtn">🔗 Compartir</button>
-        <button class="btn btn-ghost" id="replay">↺ Ver de nuevo</button>
+    <!-- ==================== PANTALLA 4: CONFIRMAR ASISTENCIA (GRAN CELEBRACIÓN) ==================== -->
+    <section class="screen screen-4" id="pantalla-4">
+      
+      <!-- Chispas y confeti festivo en movimiento -->
+      <div class="victory-confetti">
+        <span class="v-confetti c-gold"></span>
+        <span class="v-confetti c-red"></span>
+        <span class="v-confetti c-cyan"></span>
+        <span class="v-confetti c-green"></span>
+        <span class="v-confetti c-orange"></span>
+      </div>
+
+      <div class="screen-content victory-content">
+        
+        <div class="section-title-wrap">
+          <div class="ticket-header-pill pill-gold-glory">★ GRAN FINAL · CONFIRMACIÓN ★</div>
+          <h2 class="section-heading-deluxe">¿VIENES A LA CARRERA?</h2>
+        </div>
+
+        <div class="victory-layout">
+          
+          <!-- Foto compuesta del equipo Sonic con los nuevos personajes HD -->
+          <div class="group-stage-container tapme" title="¡Tócanos para celebrar!">
+            <div class="group-pedestal-glow"></div>
+            <img class="group-hero-img m-hover" src="assets/grupo.png" alt="Sonic, Tails, Knuckles, Shadow y Amy">
+          </div>
+
+          <div class="rsvp-action-center">
+            
+            <!-- Placa oficial de los padres -->
+            <div class="parents-invitation-plaque">
+              <div class="plaque-header">★ CON LA BENDICIÓN DE DIOS Y MUCHO AMOR ★</div>
+              <p class="plaque-sub">INVITAN SUS PADRES:</p>
+              <h3 class="plaque-names" id="hostsNames">Darío Melo y Dalitza Santander</h3>
+            </div>
+
+            <!-- Botón WhatsApp Épico con icono SVG nítido -->
+            <a class="btn-whatsapp-epic" id="waLink" target="_blank" rel="noopener">
+              <svg class="wa-svg-icon" viewBox="0 0 32 32" width="30" height="30" fill="#fff" aria-hidden="true">
+                <path d="M16.01 2C8.28 2 2 8.28 2 16.01c0 2.6.7 5.04 1.93 7.15L2 30l7.08-1.85A13.9 13.9 0 0016 30c7.73 0 14.01-6.28 14.01-13.99C30.01 8.28 23.74 2 16.01 2zm8.17 19.83c-.34.96-1.7 1.76-2.77 1.99-.74.16-1.7.29-4.94-1.05-4.14-1.71-6.81-5.93-7.02-6.21-.2-.28-1.68-2.24-1.68-4.28s1.06-3.04 1.44-3.46c.38-.42.84-.53 1.12-.53.28 0 .56 0 .8.02.26.02.6-.1 1 .84.42 1 .1.43 1.44 3.66.14.34.24.74.02 1.18-.22.44-.36.72-.72 1.14-.36.42-.76.94-.32 1.7.44.76 1.96 3.23 4.2 5.23 2.89 2.57 5.32 3.37 6.08 3.75.76.38 1.2.32 1.64-.18.44-.5 1.9-2.22 2.4-2.98.5-.76 1-.64 1.68-.38.68.26 4.3 2.03 5.04 2.4.74.38 1.24.56 1.42.86.18.3.18 1.74-.16 2.7z"/>
+              </svg>
+              <span class="btn-wa-caption">¡CONFIRMAR ASISTENCIA POR WHATSAPP!</span>
+            </a>
+
+            <div class="secondary-btn-dock">
+              <button class="btn-dock-item" id="shareBtn">🔗 Compartir invitación</button>
+              <button class="btn-dock-item" data-target="pantalla-1">▲ Volver al inicio ▲</button>
+            </div>
+
+            <div class="final-celebration-footer">
+              <p>Juan José Melo Santander · ¡4 Añitos de pura velocidad, risas y amistad! 🦔💙🎂</p>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
     </section>
 
-    <button class="nav prev" id="prevBtn" aria-label="Pantalla anterior">‹</button>
-    <button class="nav next" id="nextBtn" aria-label="Pantalla siguiente">›</button>
-    <div class="share-tip" id="shareTip">¡Enlace copiado! 💙</div>
+  </div>
+
+  <!-- Toast flotante de enlace copiado -->
+  <div class="toast-tip" id="shareTip">¡Enlace copiado al portapapeles! 💙🦔</div>
+
+  <!-- Reproductor oficial de la canción temática Green Hill Zone (YouTube G-i8HYi1QH0) -->
+  <div id="ytPlayerContainer" style="position:fixed; top:-9999px; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none;" aria-hidden="true">
+    <div id="ytPlayer"></div>
   </div>
 
   <script src="script.js"></script>

@@ -1,0 +1,18 @@
+{
+  "name": "tarjeta-cumpleanos-sonic",
+  "version": "2.0.0",
+  "description": "Invitación web interactiva para el cumpleaños #4 de Juan José Melo Santander",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "sonic",
+    "birthday-invitation",
+    "juan-jose"
+  ],
+  "author": "Darío Melo & Dalitza Santander",
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.65.1"
+  }
+}
